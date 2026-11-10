@@ -1,0 +1,114 @@
+{
+  "meta": {
+    "title": "Library",
+    "description": "Short practical guides on management, career, business, and decision-making."
+  },
+  "heading": {
+    "eyebrow": "Library",
+    "title": "Practical guides for every stage of your work.",
+    "subtitle": "A collection of short guides tied to videos, ready to download and apply."
+  },
+  "filters": {
+    "all": "All",
+    "searchPlaceholder": "Search guides...",
+    "emptyState": "No guides match your search."
+  },
+  "categories": {
+    "management": "Management & Leadership",
+    "career": "Career Growth",
+    "business": "Business & Numbers",
+    "decision": "Thinking & Decision-making"
+  },
+  "stats": {
+    "videos": "videos",
+    "downloads": "downloads",
+    "views": "views"
+  },
+  "card": {
+    "video": "Video",
+    "download": "Download PDF",
+    "new": "New"
+  },
+  "guides": {
+    "g01": {
+      "title": "First meeting with your new manager",
+      "description": "3 questions to ask to understand your manager's expectations."
+    },
+    "g02": {
+      "title": "A manager shouldn't pass stress to the team",
+      "description": "Turning pressure into a clear action plan."
+    },
+    "g03": {
+      "title": "Are you monitoring or controlling?",
+      "description": "The difference and how to build a stronger team."
+    },
+    "g04": {
+      "title": "Does a manager need to know everyone's job?",
+      "description": "You don't need to do their work — but you need to understand it."
+    },
+    "g05": {
+      "title": "When do you become a leader, not just a strong employee?",
+      "description": "Leadership isn't personal output — it's team output."
+    },
+    "g06": {
+      "title": "A skilled employee isn't always the best employee",
+      "description": "Evaluating performance, behavior, and team impact."
+    },
+    "g07": {
+      "title": "Why do you work hard but don't get promoted?",
+      "description": "The gap between effort and impact."
+    },
+    "g08": {
+      "title": "3 things to do before asking for a raise",
+      "description": "Prepare results, responsibilities, and your request."
+    },
+    "g09": {
+      "title": "7 rules that can change your work",
+      "description": "Practical rules to apply starting this week."
+    },
+    "g10": {
+      "title": "Should you reply to work messages after hours?",
+      "description": "The line between real urgency and being always available."
+    },
+    "g11": {
+      "title": "How to deal with a difficult manager",
+      "description": "A professional approach to understanding the problem."
+    },
+    "g12": {
+      "title": "Sales are up, profits are down",
+      "description": "Why more sales doesn't always mean more profit."
+    },
+    "g13": {
+      "title": "Why does a customer buy once and never return?",
+      "description": "Retaining the customer you already have."
+    },
+    "g14": {
+      "title": "Two stores, same product — why does one succeed?",
+      "description": "Competitive advantage isn't always the product."
+    },
+    "g15": {
+      "title": "Repeated mistakes? Review the system",
+      "description": "Before blaming the employee, review the process."
+    },
+    "g16": {
+      "title": "You don't need 100% certainty to start",
+      "description": "Test the idea with the smallest possible experiment."
+    },
+    "g17": {
+      "title": "When to continue and when to change a decision",
+      "description": "Decide based on information, not feelings."
+    },
+    "g18": {
+      "title": "Why do we lose good opportunities?",
+      "description": "Preparation matters — but don't let it become an excuse."
+    },
+    "g19": {
+      "title": "Not every AI tool will save you time",
+      "description": "Pick the tool that solves a real problem."
+    },
+    "g20": {
+      "title": "Being busy all day isn't the same as being productive",
+      "description": "Measure your day by the most important outcome."
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "title": "Projects",
+    "description": "Ibrahim Mahrous projects — AVYRO, Mothaqaf, and the Guide Library."
+  },
+  "heading": {
+    "eyebrow": "Projects",
+    "title": "Things I'm building.",
+    "subtitle": "From a knowledge initiative to a POS platform — each at a different stage."
+  },
+  "items": {
+    "p1": {
+      "title": "AVYRO",
+      "description": "An offline-first POS platform that syncs automatically when the connection returns. It includes an independent website per client, integrated inventory and order management, a customizable mobile app, and a central control panel to manage clients, subscriptions, and updates. Currently under development."
+    },
+    "p2": {
+      "title": "Mothaqaf",
+      "description": "An initiative to build an educated team that thinks, learns, and leads — with practical Arabic content built on real experience from inside the work environment."
+    },
+    "p3": {
+      "title": "The Guide Library",
+      "description": "Short, practical guides tied to videos and built on real experience in management, leadership, and decisions."
+    }
+  }
+}

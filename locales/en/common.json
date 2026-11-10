@@ -1,0 +1,74 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "library": "Library",
+    "mothaqaf": "Mothaqaf",
+    "projects": "Projects"
+  },
+  "footer": {
+    "rights": "All rights reserved",
+    "tagline": "Operations Manager · Content Creator · Impact Maker",
+    "madeBy": "Crafted with care"
+  },
+  "cta": {
+    "readMore": "Read more",
+    "browseLibrary": "Browse the Library",
+    "viewProjects": "View Projects",
+    "contactMe": "Contact Me",
+    "download": "Download PDF",
+    "subscribe": "Subscribe",
+    "emailPlaceholder": "Your email",
+    "aboutMe": "About Me"
+  },
+  "locale": {
+    "switchTo": "العربية",
+    "current": "English"
+  },
+  "status": {
+    "live": "Live",
+    "inDevelopment": "In development"
+  },
+  "carousel": {
+    "prev": "Previous",
+    "next": "Next"
+  },
+  "roles": {
+    "operations": "Operations Manager",
+    "content": "Content Creator",
+    "impact": "Impact Maker"
+  },
+  "notFound": {
+    "title": "404",
+    "message": "Page not found",
+    "backHome": "Back to home"
+  },
+  "header": {
+    "skipToContent": "Skip to content",
+    "primaryNav": "Primary navigation",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "menu": "Menu",
+    "close": "Close",
+    "contact": "Contact",
+    "switchAria": "Switch to",
+    "brandHomeAria": "Home"
+  },
+  "footerLabels": {
+    "contact": "Contact",
+    "navigation": "Navigation",
+    "follow": "Follow",
+    "backToTop": "Back to top",
+    "crafted": "Crafted with care",
+    "letsTalk": "Let's talk",
+    "gotIdea": "Got an idea?",
+    "buildTogether": "Let's build it together.",
+    "emailMe": "Email me",
+    "newsletterLabel": "Subscribe to the newsletter",
+    "newsletterPlaceholder": "Your email",
+    "newsletterSubmit": "Subscribe",
+    "newsletterSuccess": "Subscribed successfully ✓",
+    "brandHomeAria": "Home",
+    "signature": "IBRAHIM"
+  }
+}

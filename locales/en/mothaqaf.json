@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "title": "Mothaqaf",
+    "description": "Mothaqaf — an initiative to build an educated team that believes in learning, growth, and leadership."
+  },
+  "heading": {
+    "eyebrow": "Initiative",
+    "title": "Mothaqaf",
+    "subtitle": "An initiative to build an educated team: one that thinks, learns, and leads — with practical Arabic content built on real experience.",
+    "issueLabel": "Issue",
+    "issueNumber": "01",
+    "aboutLabel": "About"
+  },
+  "vision": {
+    "title": "Vision",
+    "body": "To become a more conscious leader, capable of managing people, systems, and decisions — and to document the journey so others can benefit."
+  },
+  "mission": {
+    "title": "Mission",
+    "body": "To help youth, employees, and new leaders understand the work environment, grow their professional and leadership skills, and make better decisions through simple, fast, practical Arabic content."
+  },
+  "about": {
+    "title": "About the initiative",
+    "body": "Mothaqaf is a knowledge project that starts from inside the work environment, not outside it. It doesn't deliver theory about management — but real stories, decisions, mistakes, and lessons from daily work. The goal: a generation of young leaders who understand the work environment, build systems, and make conscious decisions."
+  }
+}

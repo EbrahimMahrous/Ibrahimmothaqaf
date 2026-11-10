@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ibrahim Mahrous — Personal Website
 
-## Getting Started
+A bilingual (Arabic / English) personal website for **Ibrahim Mahrous** —
+Operations Manager, Content Creator, and Impact Maker.
 
-First, run the development server:
+The site shares practical lessons on management, leadership, and
+decision-making, built on real-world experience running teams and systems.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## ✨ Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Bilingual** — full RTL/LTR support (Arabic + English) via a typed
+  i18n layer (`lib/i18n.ts` + `locales/*/*.json`).
+- **App Router** — Next.js 14+ with the App Router, server components,
+  and localized route segments (`/ar`, `/en`).
+- **Content repository** — a single entry point (`lib/content/repository.ts`)
+  that can be swapped from local JSON data to a real API/SQL backend
+  without touching any page.
+- **Guide library** — searchable + filterable grid of guides, each tied to
+  a PDF download and a video.
+- **Editorial design system** — brand colors, tints, and typography defined
+  once in `app/globals.css` via Tailwind `@theme` tokens.
+- **Animated avatar** — a multi-variant 3D avatar with rotating rings,
+  status dot, and floating role labels.
+- **Newsletter form** — a client-side form ready to be wired to an API route.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠 Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Layer        | Choice                                   |
+| ------------ | ---------------------------------------- |
+| Framework    | Next.js (App Router)                     |
+| Language     | TypeScript                               |
+| Styling      | Tailwind CSS v4 (`@theme` tokens)        |
+| Fonts        | Cairo (Arabic) + Inter (English)         |
+| Icons        | Inline SVG                               |
+| i18n         | Custom typed layer over JSON files       |
+| Content      | Local JSON + TS data (swap-ready)        |
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📂 Project Structure

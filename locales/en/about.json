@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "title": "About Ibrahim",
+    "description": "Ibrahim Mahrous — Operations Manager for UAE brands, founder of Mothaqaf, and partner at AVYRO."
+  },
+  "heading": {
+    "eyebrow": "About",
+    "title": "I run teams, build systems, and share what I learn.",
+    "subtitle": "From inside real work — not from an ivory tower.",
+    "viewProjectsCta": "View projects",
+    "contactCta": "Contact Me"
+  },
+  "manifesto": {
+    "eyebrow": "Philosophy",
+    "quote": "\"I'd rather build one clear thing than sketch ten that never finish.\""
+  },
+  "bio": {
+    "title": "Bio",
+    "paragraphs": [
+      "I'm Ibrahim Mahrous, an Operations Manager for UAE-based brands since 2022. I oversee more than nine departments covering different areas of the business.",
+      "My role includes overseeing operations, covering sales, customer service, order fulfillment, and purchasing, alongside marketing, social media, programming, development, quality, finance, and delivery.",
+      "My core responsibility is connecting these departments, improving the performance of each team, and turning goals into clear, actionable daily processes.",
+      "Through this experience, I have learned that management is not just about theories. It is built on small, daily decisions that add up over time. This website is a space to share those lessons as they are — without embellishment."
+    ]
+  },
+  "vision": {
+    "title": "Vision",
+    "body": "To help build a generation of young leaders who understand the work environment, make conscious decisions, and build systems that run without them."
+  },
+  "mission": {
+    "title": "Mission",
+    "body": "To deliver practical Arabic content, built on real experience, that helps employees and new leaders understand their environment, grow their skills, and make better decisions — from inside the work, not outside it."
+  },
+  "principles": {
+    "title": "Principles I work by",
+    "items": [
+      {
+        "title": "Clarity over complexity",
+        "body": "A good idea can be explained in one sentence. Complexity usually means we haven't reached the core yet."
+      },
+      {
+        "title": "Execution tests truth",
+        "body": "Any idea that never leaves the room is a guess. A small real experiment beats a perfect plan on paper."
+      },
+      {
+        "title": "Depth before speed",
+        "body": "Speed helps when heading in the right direction. But the foundation matters more than the wave."
+      }
+    ]
+  },
+  "social": {
+    "title": "Get in touch",
+    "body": "I'm happy to connect via email or social — especially if you have a story or question about managing teams or building systems."
+  }
+}

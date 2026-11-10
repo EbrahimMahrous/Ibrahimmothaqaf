@@ -1,0 +1,54 @@
+{
+  "hero": {
+    "eyebrow": "Operations Manager · Content Creator · Impact Maker",
+    "title": "I run teams and systems — and share what I learn from real work.",
+    "subtitle": "Operations Manager for UAE brands, overseeing 9 departments and connecting them. Here I share practical lessons on management, leadership, and decision-making — no theory.",
+    "primaryCta": "Browse the Library",
+    "secondaryCta": "About Me",
+    "features": [
+      {
+        "title": "Real-world lessons",
+        "description": "Not theory — decisions, mistakes, and lessons from running 9 departments."
+      },
+      {
+        "title": "Conscious leadership",
+        "description": "How to build a team that thinks, decides, and owns its work."
+      },
+      {
+        "title": "System building",
+        "description": "From idea to product: AVYRO as a real attempt at building a multi-branch tool."
+      }
+    ]
+  },
+  "aboutPreview": {
+    "eyebrow": "About",
+    "title": "I connect departments, and build systems that run without me.",
+    "body": "Operations Manager for UAE-based brands since 2022, overseeing an organization with more than nine departments. My responsibilities include operations, covering sales, customer service, order fulfillment, and purchasing, alongside marketing, social media, programming, development, quality, finance, and delivery. My goal is to build an informed team that thinks and acts with awareness.",
+    "cta": "Read more",
+    "quote": "The best management decision is one that makes the system run without you."
+  },
+  "numbers": {
+    "items": [
+      { "value": "9+", "label": "Departments overseen" },
+      { "value": "2022", "label": "Journey started" },
+      { "value": "4", "label": "Knowledge categories" }
+    ]
+  },
+  "featuredGuides": {
+    "eyebrow": "Library",
+    "title": "Guides built on real experience",
+    "subtitle": "Each guide is tied to a video and built on a real problem I faced or saw teams face.",
+    "cta": "Browse the Library"
+  },
+  "projectsPreview": {
+    "eyebrow": "Projects",
+    "title": "Things I'm building",
+    "subtitle": "From a knowledge initiative to a POS platform — each at a different stage.",
+    "cta": "View Projects"
+  },
+  "cta": {
+    "title": "Have a question about managing a team or building a system?",
+    "subtitle": "I'd love to hear from you — we can talk about a real experience that fits your case.",
+    "button": "Contact Me"
+  }
+}

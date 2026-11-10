@@ -1,0 +1,74 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "about": "عن إبراهيم",
+    "library": "المكتبة",
+    "mothaqaf": "مُثَقَّف",
+    "projects": "المشاريع"
+  },
+  "footer": {
+    "rights": "جميع الحقوق محفوظة",
+    "tagline": "مدير تشغيل · منشئ محتوى · صانع أثر",
+    "madeBy": "صُنع بعناية"
+  },
+  "cta": {
+    "readMore": "اقرأ المزيد",
+    "browseLibrary": "تصفح المكتبة",
+    "viewProjects": "استعرض المشاريع",
+    "contactMe": "تواصل معي",
+    "download": "تحميل PDF",
+    "subscribe": "اشترك",
+    "emailPlaceholder": "بريدك الإلكتروني",
+    "aboutMe": "تعرف عليّ"
+  },
+  "locale": {
+    "switchTo": "English",
+    "current": "العربية"
+  },
+  "status": {
+    "live": "متاح",
+    "inDevelopment": "قيد التطوير"
+  },
+  "carousel": {
+    "prev": "السابق",
+    "next": "التالي"
+  },
+  "roles": {
+    "operations": "مدير تشغيل",
+    "content": "منشئ محتوى",
+    "impact": "صانع أثر"
+  },
+  "notFound": {
+    "title": "404",
+    "message": "الصفحة غير موجودة",
+    "backHome": "العودة للرئيسية"
+  },
+  "header": {
+    "skipToContent": "تخطَّ إلى المحتوى",
+    "primaryNav": "التنقل الرئيسي",
+    "openMenu": "فتح القائمة",
+    "closeMenu": "إغلاق القائمة",
+    "menu": "القائمة",
+    "close": "إغلاق",
+    "contact": "تواصل",
+    "switchAria": "التبديل إلى",
+    "brandHomeAria": "الصفحة الرئيسية"
+  },
+  "footerLabels": {
+    "contact": "تواصل",
+    "navigation": "التنقل",
+    "follow": "تابعني",
+    "backToTop": "إلى الأعلى",
+    "crafted": "صُنع بعناية",
+    "letsTalk": "خلّينا نتواصل",
+    "gotIdea": "عندك فكرة؟",
+    "buildTogether": "خلّينا نبنيها سوا.",
+    "emailMe": "راسلني",
+    "newsletterLabel": "اشترك في النشرة",
+    "newsletterPlaceholder": "بريدك الإلكتروني",
+    "newsletterSubmit": "اشترك",
+    "newsletterSuccess": "تم الاشتراك بنجاح ✓",
+    "brandHomeAria": "الصفحة الرئيسية",
+    "signature": "إبراهيم"
+  }
+}
