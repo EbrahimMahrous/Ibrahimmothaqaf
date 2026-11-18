@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { subscribeToNewsletter } from "@/lib/api";
 
 interface NewsletterFormProps {
   placeholder: string;
@@ -19,27 +20,35 @@ export function NewsletterForm({
   const [status, setStatus] = useState<
     "idle" | "loading" | "success" | "error"
   >("idle");
+  const [message, setMessage] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!email || status === "loading") return;
 
     setStatus("loading");
+    setMessage("");
 
     try {
-      // TODO: wire to API
-      // await fetch('/api/newsletter', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ email }),
-      // })
-      await new Promise((resolve) => setTimeout(resolve, 600));
+      // Call backend API
+      await subscribeToNewsletter(email);
       setStatus("success");
+      setMessage(successMessage);
       setEmail("");
-      setTimeout(() => setStatus("idle"), 4000);
-    } catch {
+      // Reset to idle after 5s
+      setTimeout(() => {
+        setStatus("idle");
+        setMessage("");
+      }, 5000);
+    } catch (err) {
       setStatus("error");
-      setTimeout(() => setStatus("idle"), 4000);
+      setMessage(
+        err instanceof Error && err.message ? err.message : errorMessage,
+      );
+      setTimeout(() => {
+        setStatus("idle");
+        setMessage("");
+      }, 5000);
     }
   }
 
@@ -78,14 +87,14 @@ export function NewsletterForm({
         </button>
       </div>
 
-      {status === "success" && (
+      {message && status === "success" && (
         <p className="mt-2 text-center text-xs font-medium text-primary sm:text-start">
-          {successMessage}
+          {message}
         </p>
       )}
-      {status === "error" && (
+      {message && status === "error" && (
         <p className="mt-2 text-center text-xs font-medium text-red-500 sm:text-start">
-          {errorMessage}
+          {message}
         </p>
       )}
     </form>

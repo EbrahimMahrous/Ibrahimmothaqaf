@@ -6,6 +6,8 @@ import { HeroSection } from "@/components/sections/home/HeroSection";
 import { AboutPreview } from "@/components/sections/home/AboutPreview";
 import { FeaturedGuides } from "@/components/sections/home/FeaturedGuides";
 import { ProjectsPreview } from "@/components/sections/home/ProjectsPreview";
+import { fetchHeroImages } from "@/lib/api";
+import { cacheLife, cacheTag } from "next/cache";
 
 // Disable instant navigation caching — ensures fresh data on each visit.
 export const instant = false;
@@ -27,6 +29,29 @@ export async function generateMetadata({
   });
 }
 
+// Fallback portraits if backend has no images yet
+const DEFAULT_PORTRAITS = [
+  { src: "/images/hero/portrait-1.jpg", alt: "" },
+  { src: "/images/hero/portrait-2.jpg", alt: "" },
+  { src: "/images/hero/portrait-3.jpg", alt: "" },
+  { src: "/images/hero/portrait-4.jpg", alt: "" },
+  { src: "/images/hero/portrait-5.jpg", alt: "" },
+  { src: "/images/hero/portrait-6.jpg", alt: "" },
+  { src: "/images/hero/portrait-7.jpg", alt: "" },
+];
+
+// Cache the whole page for 60s using the new Next 16 API.
+async function getHeroData(locale: string) {
+  "use cache";
+  cacheLife("minutes"); // ~ 1 min default (use "max" for longest)
+  cacheTag("hero");
+
+  const images = await fetchHeroImages();
+  return images.length > 0
+    ? images.map((img) => ({ src: img.url, alt: img.alt || "" }))
+    : DEFAULT_PORTRAITS;
+}
+
 export default async function HomePage({ params }: PageProps) {
   const { locale } = await params;
   const t = getMessages(locale);
@@ -36,11 +61,8 @@ export default async function HomePage({ params }: PageProps) {
   const guides = contentRepository.getGuides(locale).slice(0, 3);
   const projects = contentRepository.getProjects(locale).slice(0, 3);
 
-  // Portrait placeholders — 7 repeated items for the hero carousel.
-  const portraits = Array.from({ length: 7 }, () => ({
-    src: "/images/hero/portrait-1.jpg",
-    alt: "",
-  }));
+  // Hero portraits from backend (cached).
+  const portraits = await getHeroData(locale);
 
   return (
     <>

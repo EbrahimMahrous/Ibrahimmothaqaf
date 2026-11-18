@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { siteConfig, type Locale } from "@/config/site.config";
 import { AnimatedAvatar } from "@/components/layout/AnimatedAvatar";
 import { NewsletterForm } from "@/components/forms/NewsletterForm";
+import type { Settings } from "@/types";
 
 interface FooterProps {
   locale: string;
@@ -16,7 +17,6 @@ interface FooterProps {
     mothaqaf: string;
     projects: string;
   };
-  /** Localized footer strings (from common.footerLabels). */
   labels: {
     contact: string;
     navigation: string;
@@ -34,6 +34,8 @@ interface FooterProps {
     brandHomeAria: string;
     signature: string;
   };
+  /** Optional settings from server side (passed by layout) */
+  settings?: Settings | null;
 }
 
 // Renders the current year on the client to avoid hydration mismatches.
@@ -56,14 +58,7 @@ const socialIcons = {
   ),
 } as const;
 
-// Social links — external URLs from siteConfig.
-const socialLinks = [
-  { key: "linkedin", label: "LinkedIn", href: siteConfig.social.linkedin },
-  { key: "twitter", label: "Twitter", href: siteConfig.social.twitter },
-  { key: "github", label: "GitHub", href: siteConfig.social.github },
-] as const;
-
-export function Footer({ locale, footer, nav, labels }: FooterProps) {
+export function Footer({ locale, footer, nav, labels, settings }: FooterProps) {
   const l = locale as Locale;
   const year = 2025;
 
@@ -75,6 +70,34 @@ export function Footer({ locale, footer, nav, labels }: FooterProps) {
     { href: `/${locale}/mothaqaf`, label: nav.mothaqaf },
     { href: `/${locale}/projects`, label: nav.projects },
   ];
+
+  // Build social links — settings overrides siteConfig.
+  // Only include links that have a URL.
+  const socialLinks = [
+    {
+      key: "linkedin" as const,
+      label: "LinkedIn",
+      href: settings?.social.linkedin || siteConfig.social.linkedin,
+    },
+    {
+      key: "twitter" as const,
+      label: "Twitter",
+      href: settings?.social.twitter || siteConfig.social.twitter,
+    },
+    {
+      key: "github" as const,
+      label: "GitHub",
+      href: siteConfig.social.github, // no github in backend settings
+    },
+  ].filter((s) => s.href);
+
+  const contactEmail = settings?.contactEmail || siteConfig.social.email;
+
+  // WhatsApp — only if provided
+  const whatsappDigits = settings?.whatsapp?.replace(/\D/g, "") || "";
+  const whatsappHref = whatsappDigits
+    ? `https://wa.me/${whatsappDigits}`
+    : null;
 
   // Smooth scroll back to the top of the page.
   const handleBackToTop = () => {
@@ -119,7 +142,7 @@ export function Footer({ locale, footer, nav, labels }: FooterProps) {
           {/* Secondary email CTA */}
           <div className="mt-6">
             <a
-              href={`mailto:${siteConfig.social.email}`}
+              href={`mailto:${contactEmail}`}
               className="inline-flex items-center gap-2 text-sm font-medium text-muted transition-colors hover:text-primary"
             >
               <svg
@@ -222,12 +245,24 @@ export function Footer({ locale, footer, nav, labels }: FooterProps) {
               ))}
             </ul>
 
+            {/* Contact methods */}
             <a
-              href={`mailto:${siteConfig.social.email}`}
+              href={`mailto:${contactEmail}`}
               className="mt-6 block text-sm font-medium text-text transition-colors hover:text-primary"
             >
-              {siteConfig.social.email}
+              {contactEmail}
             </a>
+
+            {whatsappHref && (
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="mt-2 block text-sm font-medium text-text transition-colors hover:text-primary"
+              >
+                واتساب: {settings?.whatsapp}
+              </a>
+            )}
 
             <button
               type="button"

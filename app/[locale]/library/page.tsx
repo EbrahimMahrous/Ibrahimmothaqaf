@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { getMessages } from "@/lib/i18n";
-import { contentRepository } from "@/lib/content/repository";
 import { buildMetadata } from "@/lib/seo";
 import { SectionHeading } from "@/components/common/SectionHeading";
 import { LibraryStats } from "@/components/sections/library/LibraryStats";
 import { LibraryGrid } from "@/components/sections/library/LibraryGrid";
+import { fetchFiles } from "@/lib/api";
+import { cacheLife, cacheTag } from "next/cache";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -23,17 +24,41 @@ export async function generateMetadata({
   });
 }
 
+// Cache file list for a short time (refreshed via revalidateTag when admin uploads).
+async function getCachedFiles() {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("files");
+  return await fetchFiles();
+}
+
 export default async function LibraryPage({ params }: PageProps) {
   const { locale } = await params;
   const t = getMessages(locale);
   const l = (locale === "en" ? "en" : "ar") as "ar" | "en";
 
-  // Load all guides for the current locale.
-  const guides = contentRepository.getGuides(locale);
+  const files = await getCachedFiles();
 
-  // Aggregate stats for the header cards.
-  const totalViews = guides.reduce((s, g) => s + g.stats.views, 0);
-  const totalDownloads = guides.reduce((s, g) => s + g.stats.downloads, 0);
+  // Map backend files into the shape expected by LibraryGrid.
+  // Adjust fields (views, video, categories) to match your Grid props.
+  const guides = files.map((f) => ({
+    id: f._id,
+    slug: f._id,
+    title: f.title,
+    description: f.description,
+    cover: "/images/placeholder.jpg",
+    category: "files",
+    stats: {
+      views: 0,
+      downloads: f.downloads,
+    },
+    video: false,
+    downloadUrl: f.url,
+    createdAt: f.createdAt,
+    language: l,
+  }));
+
+  const totalDownloads = files.reduce((s, f) => s + f.downloads, 0);
 
   return (
     <>
@@ -53,9 +78,9 @@ export default async function LibraryPage({ params }: PageProps) {
 
           <div className="mx-auto mt-10 max-w-3xl">
             <LibraryStats
-              totalVideos={guides.length}
+              totalVideos={files.length}
               totalDownloads={totalDownloads}
-              totalViews={totalViews}
+              totalViews={0}
               labels={t.library.stats}
               locale={l}
             />
@@ -67,7 +92,7 @@ export default async function LibraryPage({ params }: PageProps) {
       <section className="section pt-0">
         <div className="container-editorial">
           <LibraryGrid
-            guides={guides}
+            guides={guides as any}
             locale={l}
             labels={{
               filters: t.library.filters,
