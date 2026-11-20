@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { siteConfig, type Locale } from "@/config/site.config";
 import { AnimatedAvatar } from "@/components/layout/AnimatedAvatar";
+import type { Settings } from "@/types";
 
 interface HeaderProps {
   locale: string;
@@ -30,6 +32,8 @@ interface HeaderProps {
     switchAria: string;
     brandHomeAria: string;
   };
+  /** Site settings from backend (logo, contact info, social links). */
+  settings?: Settings | null;
 }
 
 export function Header({
@@ -39,6 +43,7 @@ export function Header({
   ctaLabel,
   ctaHref,
   labels,
+  settings,
 }: HeaderProps) {
   const l = locale as Locale;
   const pathname = usePathname() || "";
@@ -89,7 +94,6 @@ export function Header({
     href === `/${locale}` ? pathname === href : pathname.startsWith(href);
 
   // ─── Locale switch URL ────────────────────────────────────
-  // Replace the first URL segment with the target locale.
   const targetLocale = locale === "ar" ? "en" : "ar";
   const segs = pathname.split("/").filter(Boolean);
   if (segs[0] === "ar" || segs[0] === "en") segs[0] = targetLocale;
@@ -97,6 +101,16 @@ export function Header({
   const switchHref = `/${segs.join("/")}`;
 
   const siteName = siteConfig.siteName[l];
+
+  // ─── Dynamic logo from settings (falls back to AnimatedAvatar) ───
+  const logoUrl = settings?.logo?.url;
+
+  // ─── Contact info from settings (falls back to siteConfig) ───────
+  const contactEmail = settings?.contactEmail || siteConfig.social.email;
+  const whatsappDigits = settings?.whatsapp?.replace(/\D/g, "") || "";
+  const whatsappHref = whatsappDigits
+    ? `https://wa.me/${whatsappDigits}`
+    : null;
 
   return (
     <>
@@ -123,13 +137,24 @@ export function Header({
             aria-label={`${siteName} — ${labels.brandHomeAria}`}
             className="group flex items-center gap-2.5 transition-opacity hover:opacity-90"
           >
-            <AnimatedAvatar
-              locale={locale}
-              size={44}
-              showStatus
-              showName
-              variant="watermark"
-            />
+            {logoUrl ? (
+              <Image
+                src={logoUrl}
+                alt={siteName}
+                width={44}
+                height={44}
+                className="object-contain"
+                priority
+              />
+            ) : (
+              <AnimatedAvatar
+                locale={locale}
+                size={44}
+                showStatus
+                showName
+                variant="watermark"
+              />
+            )}
           </Link>
 
           {/* Desktop nav */}
@@ -303,40 +328,71 @@ export function Header({
               <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
                 {labels.contact}
               </p>
+
+              {/* Email — from settings or siteConfig */}
               <a
-                href={`mailto:${siteConfig.social.email}`}
+                href={`mailto:${contactEmail}`}
                 className="block text-sm font-medium text-text transition-colors hover:text-primary"
               >
-                {siteConfig.social.email}
+                {contactEmail}
               </a>
+
+              {/* WhatsApp — only if provided in settings */}
+              {whatsappHref && (
+                <a
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="mt-2 block text-sm font-medium text-text transition-colors hover:text-primary"
+                >
+                  واتساب: {settings?.whatsapp}
+                </a>
+              )}
+
+              {/* Social links — from settings or siteConfig */}
               <div className="mt-4 flex gap-2">
-                <a
-                  href={siteConfig.social.linkedin}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="text-xs text-muted hover:text-primary"
-                >
-                  LinkedIn
-                </a>
-                <span className="text-muted">·</span>
-                <a
-                  href={siteConfig.social.twitter}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="text-xs text-muted hover:text-primary"
-                >
-                  Twitter
-                </a>
-                <span className="text-muted">·</span>
-                <a
-                  href={siteConfig.social.github}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="text-xs text-muted hover:text-primary"
-                >
-                  GitHub
-                </a>
+                {(settings?.social.linkedin || siteConfig.social.linkedin) && (
+                  <a
+                    href={
+                      settings?.social.linkedin || siteConfig.social.linkedin
+                    }
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="text-xs text-muted hover:text-primary"
+                  >
+                    LinkedIn
+                  </a>
+                )}
+                {(settings?.social.twitter || siteConfig.social.twitter) && (
+                  <>
+                    <span className="text-muted">·</span>
+                    <a
+                      href={
+                        settings?.social.twitter || siteConfig.social.twitter
+                      }
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="text-xs text-muted hover:text-primary"
+                    >
+                      Twitter
+                    </a>
+                  </>
+                )}
+                {siteConfig.social.github && (
+                  <>
+                    <span className="text-muted">·</span>
+                    <a
+                      href={siteConfig.social.github}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="text-xs text-muted hover:text-primary"
+                    >
+                      GitHub
+                    </a>
+                  </>
+                )}
               </div>
+
               <Link
                 href={ctaHref}
                 onClick={() => setMenuOpen(false)}

@@ -9,7 +9,7 @@ import { ProjectsPreview } from "@/components/sections/home/ProjectsPreview";
 import { fetchHeroImages } from "@/lib/api";
 import { cacheLife, cacheTag } from "next/cache";
 
-// Disable instant navigation caching — ensures fresh data on each visit.
+// Disable instant navigation validation for this segment.
 export const instant = false;
 
 interface PageProps {
@@ -40,10 +40,10 @@ const DEFAULT_PORTRAITS = [
   { src: "/images/hero/portrait-7.jpg", alt: "" },
 ];
 
-// Cache the whole page for 60s using the new Next 16 API.
-async function getHeroData(locale: string) {
+// Cache hero data — refreshed via revalidateTag('hero')
+async function getHeroData() {
   "use cache";
-  cacheLife("minutes"); // ~ 1 min default (use "max" for longest)
+  cacheLife("minutes");
   cacheTag("hero");
 
   const images = await fetchHeroImages();
@@ -62,11 +62,10 @@ export default async function HomePage({ params }: PageProps) {
   const projects = contentRepository.getProjects(locale).slice(0, 3);
 
   // Hero portraits from backend (cached).
-  const portraits = await getHeroData(locale);
+  const portraits = await getHeroData();
 
   return (
     <>
-      {/* ─── Hero ───────────────────────────────────────────── */}
       <HeroSection
         locale={locale}
         eyebrow={t.home.hero.eyebrow}
@@ -85,7 +84,6 @@ export default async function HomePage({ params }: PageProps) {
         features={t.home.hero.features}
       />
 
-      {/* ─── About preview with localized quote ─────────────── */}
       <AboutPreview
         locale={locale}
         eyebrow={t.home.aboutPreview.eyebrow}
@@ -95,7 +93,6 @@ export default async function HomePage({ params }: PageProps) {
         quote={t.home.aboutPreview.quote}
       />
 
-      {/* ─── Featured guides ────────────────────────────────── */}
       <FeaturedGuides
         locale={l}
         eyebrow={t.home.featuredGuides.eyebrow}
@@ -113,7 +110,6 @@ export default async function HomePage({ params }: PageProps) {
         }}
       />
 
-      {/* ─── Projects preview ───────────────────────────────── */}
       <ProjectsPreview
         locale={locale}
         eyebrow={t.home.projectsPreview.eyebrow}

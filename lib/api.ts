@@ -1,46 +1,68 @@
 import type { HeroImage, DownloadFile, Settings, ApiResponse } from "@/types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+// ─────────────────────────────────────────────────────────────
+// API URL — picks the right base URL per environment
+// Priority: NEXT_PUBLIC_API_URL (Vercel) > auto-detect > fallback
+// ─────────────────────────────────────────────────────────────
+
+const getApiUrl = (): string => {
+  // 1. Env var wins (set in Vercel / .env.local)
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+
+  // 2. Localhost auto-detect
+  if (typeof window !== "undefined") {
+    const hostname = window.location.hostname;
+    if (hostname === "localhost" || hostname === "127.0.0.1") {
+      return "http://localhost:3000/api";
+    }
+  }
+
+  // 3. Production fallback
+  return "https://mothaqaf-backend.vercel.app/api";
+};
+
+const API_URL = getApiUrl();
 
 // ─────────────────────────────────────────────────────────────
-// GET helpers — used in Server Components (ISR caching)
+// GET helpers — used in Server Components
+// NOTE: Next.js 16 with cacheComponents disables `next.revalidate`.
+// Caching is handled by the caller via "use cache" + cacheLife/cacheTag.
 // ─────────────────────────────────────────────────────────────
 
 export async function fetchHeroImages(): Promise<HeroImage[]> {
   try {
-    const res = await fetch(`${API_URL}/hero`, {
-      next: { revalidate: 60, tags: ["hero"] },
-    });
+    const res = await fetch(`${API_URL}/hero`, { cache: "no-store" });
     if (!res.ok) return [];
     const json = (await res.json()) as ApiResponse<HeroImage[]>;
     return json.data || [];
-  } catch {
+  } catch (err) {
+    console.error("[fetchHeroImages] failed:", err);
     return [];
   }
 }
 
 export async function fetchFiles(): Promise<DownloadFile[]> {
   try {
-    const res = await fetch(`${API_URL}/files`, {
-      next: { revalidate: 60, tags: ["files"] },
-    });
+    const res = await fetch(`${API_URL}/files`, { cache: "no-store" });
     if (!res.ok) return [];
     const json = (await res.json()) as ApiResponse<DownloadFile[]>;
     return json.data || [];
-  } catch {
+  } catch (err) {
+    console.error("[fetchFiles] failed:", err);
     return [];
   }
 }
 
 export async function fetchSettings(): Promise<Settings | null> {
   try {
-    const res = await fetch(`${API_URL}/settings`, {
-      next: { revalidate: 300, tags: ["settings"] },
-    });
+    const res = await fetch(`${API_URL}/settings`, { cache: "no-store" });
     if (!res.ok) return null;
     const json = (await res.json()) as ApiResponse<Settings>;
     return json.data || null;
-  } catch {
+  } catch (err) {
+    console.error("[fetchSettings] failed:", err);
     return null;
   }
 }

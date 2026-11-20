@@ -7,6 +7,9 @@ import { LibraryGrid } from "@/components/sections/library/LibraryGrid";
 import { fetchFiles } from "@/lib/api";
 import { cacheLife, cacheTag } from "next/cache";
 
+// Disable instant navigation validation for this segment.
+export const instant = false;
+
 interface PageProps {
   params: Promise<{ locale: string }>;
 }
@@ -24,7 +27,7 @@ export async function generateMetadata({
   });
 }
 
-// Cache file list for a short time (refreshed via revalidateTag when admin uploads).
+// Cache file list — refreshed via revalidateTag('files')
 async function getCachedFiles() {
   "use cache";
   cacheLife("minutes");
@@ -40,7 +43,6 @@ export default async function LibraryPage({ params }: PageProps) {
   const files = await getCachedFiles();
 
   // Map backend files into the shape expected by LibraryGrid.
-  // Adjust fields (views, video, categories) to match your Grid props.
   const guides = files.map((f) => ({
     id: f._id,
     slug: f._id,
@@ -62,7 +64,6 @@ export default async function LibraryPage({ params }: PageProps) {
 
   return (
     <>
-      {/* ─── Header + stats ─────────────────────────────────── */}
       <section className="section relative overflow-hidden">
         <div
           aria-hidden
@@ -88,7 +89,6 @@ export default async function LibraryPage({ params }: PageProps) {
         </div>
       </section>
 
-      {/* ─── Grid + filters ─────────────────────────────────── */}
       <section className="section pt-0">
         <div className="container-editorial">
           <LibraryGrid

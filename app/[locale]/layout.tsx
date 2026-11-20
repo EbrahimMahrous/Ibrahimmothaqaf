@@ -8,6 +8,7 @@ import { BackgroundFX } from "@/components/common/BackgroundFX";
 import { getMessages, isLocale } from "@/lib/i18n";
 import { siteConfig } from "@/config/site.config";
 import { fetchSettings } from "@/lib/api";
+import { cacheLife, cacheTag } from "next/cache";
 
 // ─── Fonts (Arabic + English) ─────────────────────────────
 const cairo = Cairo({
@@ -37,6 +38,14 @@ export async function generateStaticParams() {
   return siteConfig.locales.map((locale) => ({ locale }));
 }
 
+// Cache settings — refreshed via revalidateTag('settings')
+async function getCachedSettings() {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("settings");
+  return await fetchSettings();
+}
+
 export default async function LocaleLayout({ children, params }: LayoutProps) {
   const { locale } = await params;
 
@@ -47,8 +56,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
   const dir = locale === "ar" ? "rtl" : "ltr";
 
   // Fetch site settings from backend (logo, social, whatsapp, email).
-  // Falls back to null if the API is unreachable — Footer handles that.
-  const settings = await fetchSettings();
+  const settings = await getCachedSettings();
 
   return (
     <html
@@ -65,6 +73,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
           ctaLabel={t.common.cta.contactMe}
           ctaHref={`/${locale}/about`}
           labels={t.common.header}
+          settings={settings}
         />
         <main id="main" className="relative">
           {children}
