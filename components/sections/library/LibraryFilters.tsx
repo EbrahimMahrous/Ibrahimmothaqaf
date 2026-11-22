@@ -1,24 +1,15 @@
 "use client";
 
-import type { GuideCategory } from "@/lib/content/types";
-
-interface LibraryFiltersProps {
-  categories: Record<string, string>;
-  active: GuideCategory | "all";
-  onChange: (c: GuideCategory | "all") => void;
-  allLabel: string;
-  searchValue: string;
-  onSearch: (v: string) => void;
-  searchPlaceholder: string;
-}
+import type { CategoryFilter, LibraryFiltersProps } from "@/types";
 
 // Fixed render order for category buttons.
-const ordered: (GuideCategory | "all")[] = [
+const ordered: CategoryFilter[] = [
   "all",
   "management",
   "career",
   "business",
   "decision",
+  "other",
 ];
 
 export function LibraryFilters({
@@ -34,9 +25,9 @@ export function LibraryFilters({
 
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-      {/* Category pills */}
       <div className="flex flex-wrap gap-2">
         {ordered.map((key) => {
+          if (key !== "all" && !categories[key]) return null;
           const isActive = active === key;
           return (
             <button
@@ -55,7 +46,6 @@ export function LibraryFilters({
         })}
       </div>
 
-      {/* Search input */}
       <div className="relative w-full md:w-64">
         <input
           type="text"

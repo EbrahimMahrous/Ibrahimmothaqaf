@@ -2,50 +2,17 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { ArrowUp } from "lucide-react";
 import { siteConfig, type Locale } from "@/config/site.config";
 import { AnimatedAvatar } from "@/components/layout/AnimatedAvatar";
-import { NewsletterForm } from "@/components/forms/NewsletterForm";
-import type { Settings } from "@/types";
+import type { FooterProps } from "@/types";
 
-interface FooterProps {
-  locale: string;
-  footer: { rights: string; tagline: string; madeBy: string };
-  nav: {
-    home: string;
-    about: string;
-    library: string;
-    mothaqaf: string;
-    projects: string;
-  };
-  labels: {
-    contact: string;
-    navigation: string;
-    follow: string;
-    backToTop: string;
-    crafted: string;
-    letsTalk: string;
-    gotIdea: string;
-    buildTogether: string;
-    emailMe: string;
-    newsletterLabel: string;
-    newsletterPlaceholder: string;
-    newsletterSubmit: string;
-    newsletterSuccess: string;
-    brandHomeAria: string;
-    signature: string;
-  };
-  /** Optional settings from server side (passed by layout) */
-  settings?: Settings | null;
-}
-
-// Renders the current year on the client to avoid hydration mismatches.
 function CurrentYear({ fallback = 2025 }: { fallback?: number }) {
   const [year, setYear] = useState(fallback);
   useEffect(() => setYear(new Date().getFullYear()), []);
   return <>{year}</>;
 }
 
-// Inline social icons — keep them dependency-free.
 const socialIcons = {
   linkedin: (
     <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.5h4v11H3v-11Zm6 0h3.8v1.5h.05c.53-.95 1.83-1.95 3.77-1.95 4.03 0 4.78 2.65 4.78 6.1v5.35H19v-4.74c0-1.13-.02-2.58-1.57-2.58-1.57 0-1.81 1.23-1.81 2.5v4.82H9v-11Z" />
@@ -62,7 +29,6 @@ export function Footer({ locale, footer, nav, labels, settings }: FooterProps) {
   const l = locale as Locale;
   const year = 2025;
 
-  // Internal nav links.
   const navLinks = [
     { href: `/${locale}`, label: nav.home },
     { href: `/${locale}/about`, label: nav.about },
@@ -71,8 +37,6 @@ export function Footer({ locale, footer, nav, labels, settings }: FooterProps) {
     { href: `/${locale}/projects`, label: nav.projects },
   ];
 
-  // Build social links — settings overrides siteConfig.
-  // Only include links that have a URL.
   const socialLinks = [
     {
       key: "linkedin" as const,
@@ -87,219 +51,120 @@ export function Footer({ locale, footer, nav, labels, settings }: FooterProps) {
     {
       key: "github" as const,
       label: "GitHub",
-      href: siteConfig.social.github, // no github in backend settings
+      href: siteConfig.social.github,
     },
   ].filter((s) => s.href);
 
-  const contactEmail = settings?.contactEmail || siteConfig.social.email;
-
-  // WhatsApp — only if provided
-  const whatsappDigits = settings?.whatsapp?.replace(/\D/g, "") || "";
-  const whatsappHref = whatsappDigits
-    ? `https://wa.me/${whatsappDigits}`
-    : null;
-
-  // Smooth scroll back to the top of the page.
   const handleBackToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <footer className="relative mt-20 overflow-hidden pt-20 pb-0">
-      {/* Giant signature watermark in the background */}
+    <footer className="relative mt-20 overflow-hidden">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 select-none overflow-hidden"
       >
-        <p className="whitespace-nowrap text-center text-[20vw] font-black leading-[0.85] tracking-tighter text-primary-ghost">
+        <p className="whitespace-nowrap text-center text-[18vw] font-black leading-[0.85] tracking-tighter text-primary-ghost opacity-40">
           {labels.signature}
         </p>
       </div>
 
-      <div className="container-editorial relative">
-        {/* Central CTA + newsletter form */}
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">
-            {labels.letsTalk}
-          </p>
-          <h2 className="heading-section mt-4 text-text">
-            {labels.gotIdea}{" "}
-            <span className="block text-text/70">{labels.buildTogether}</span>
-          </h2>
-
-          {/* Newsletter form */}
-          <div className="mt-8">
-            <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-muted">
-              {labels.newsletterLabel}
-            </p>
-            <NewsletterForm
-              placeholder={labels.newsletterPlaceholder}
-              submitLabel={labels.newsletterSubmit}
-              successMessage={labels.newsletterSuccess}
-            />
-          </div>
-
-          {/* Secondary email CTA */}
-          <div className="mt-6">
-            <a
-              href={`mailto:${contactEmail}`}
-              className="inline-flex items-center gap-2 text-sm font-medium text-muted transition-colors hover:text-primary"
-            >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                aria-hidden
+      <section className="relative py-16">
+        <div className="container-editorial relative">
+          <div className="grid gap-10 md:grid-cols-12 md:gap-6">
+            <div className="flex flex-col items-center md:col-span-5 md:items-start text-center md:text-start">
+              <Link
+                href={`/${locale}`}
+                className="group inline-flex items-center gap-3"
+                aria-label={`${siteConfig.siteName[l]} — ${labels.brandHomeAria}`}
               >
-                <path
-                  d="M3 7l9 6 9-6M3 7v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1Z"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                <AnimatedAvatar
+                  locale={locale}
+                  size={48}
+                  showStatus={false}
+                  showName
+                  variant="watermark"
+                  nameClassName="text-base"
                 />
-              </svg>
-              {labels.emailMe}
-            </a>
-          </div>
-        </div>
+              </Link>
+              <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted">
+                {footer.tagline}
+              </p>
+              <p className="mt-2 text-xs text-muted/60">{footer.madeBy}</p>
+            </div>
 
-        {/* Divider */}
-        <div
-          aria-hidden
-          className="mx-auto my-16 h-px max-w-3xl bg-linear-to-r from-transparent via-primary/20 to-transparent"
-        />
-
-        {/* Grid: brand + nav + social */}
-        <div className="grid gap-10 text-center md:grid-cols-12 md:gap-6 md:text-start">
-          {/* Brand column */}
-          <div className="flex flex-col items-center md:col-span-5 md:items-start">
-            <Link
-              href={`/${locale}`}
-              className="group inline-flex items-center gap-3"
-              aria-label={`${siteConfig.siteName[l]} — ${labels.brandHomeAria}`}
-            >
-              <AnimatedAvatar
-                locale={locale}
-                size={48}
-                showStatus={false}
-                showName
-                variant="watermark"
-                nameClassName="text-base"
-              />
-            </Link>
-            <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted">
-              {footer.tagline}
-            </p>
-            <p className="mt-3 text-xs text-muted/70">{footer.madeBy}</p>
-          </div>
-
-          {/* Nav column */}
-          <div className="flex flex-col items-center md:col-span-4 md:items-start">
-            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-muted">
-              {labels.navigation}
-            </p>
-            <ul className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
-              {navLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="group inline-flex items-center gap-1.5 text-text/80 transition-colors hover:text-primary"
-                  >
-                    <span className="h-px w-0 bg-primary transition-all duration-200 group-hover:w-3" />
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Social + contact column */}
-          <div className="flex flex-col items-center md:col-span-3 md:items-start">
-            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-muted">
-              {labels.follow}
-            </p>
-            <ul className="flex items-center justify-center gap-2 md:justify-start">
-              {socialLinks.map((link) => (
-                <li key={link.key}>
-                  <a
-                    href={link.href}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    aria-label={link.label}
-                    title={link.label}
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary-tint bg-canvas/50 text-muted backdrop-blur-sm transition-colors hover:border-primary hover:bg-primary hover:text-white"
-                  >
-                    <svg
-                      width="15"
-                      height="15"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      aria-hidden
+            <div className="flex flex-col items-center md:col-span-4 md:items-start">
+              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-muted">
+                {labels.navigation}
+              </p>
+              <ul className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
+                {navLinks.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="group inline-flex items-center gap-1.5 text-text/80 transition-colors hover:text-primary"
                     >
-                      {socialIcons[link.key]}
-                    </svg>
-                  </a>
-                </li>
-              ))}
-            </ul>
+                      <span className="h-px w-0 bg-primary transition-all duration-200 group-hover:w-3" />
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-            {/* Contact methods */}
-            <a
-              href={`mailto:${contactEmail}`}
-              className="mt-6 block text-sm font-medium text-text transition-colors hover:text-primary"
-            >
-              {contactEmail}
-            </a>
+            <div className="flex flex-col items-center md:col-span-3 md:items-start">
+              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-muted">
+                {labels.follow}
+              </p>
+              <ul className="flex items-center gap-2">
+                {socialLinks.map((link) => (
+                  <li key={link.key}>
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      aria-label={link.label}
+                      title={link.label}
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-primary-tint bg-canvas/50 text-muted backdrop-blur-sm transition-colors hover:border-primary hover:bg-primary hover:text-white"
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        aria-hidden
+                      >
+                        {socialIcons[link.key]}
+                      </svg>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
 
-            {whatsappHref && (
-              <a
-                href={whatsappHref}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="mt-2 block text-sm font-medium text-text transition-colors hover:text-primary"
+          <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-primary-tint pt-6 text-xs text-muted sm:flex-row">
+            <p className="text-center sm:text-start">
+              © <CurrentYear fallback={year} /> {siteConfig.siteName[l]} —{" "}
+              {footer.rights}
+            </p>
+
+            <div className="flex items-center gap-4">
+              <p className="text-muted/60">{labels.crafted}</p>
+              <button
+                type="button"
+                onClick={handleBackToTop}
+                aria-label={labels.backToTop}
+                className="inline-flex items-center gap-1.5 rounded-full border border-primary-tint bg-canvas/50 px-3 py-1.5 text-xs font-medium text-muted backdrop-blur-sm transition-colors hover:border-primary hover:text-primary"
               >
-                واتساب: {settings?.whatsapp}
-              </a>
-            )}
-
-            <button
-              type="button"
-              onClick={handleBackToTop}
-              className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-primary-tint bg-canvas/50 px-3 py-1.5 text-xs font-medium text-muted backdrop-blur-sm transition-colors hover:border-primary hover:text-primary"
-            >
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                aria-hidden
-              >
-                <path
-                  d="M12 19V5m0 0-6 6m6-6 6 6"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              {labels.backToTop}
-            </button>
+                <ArrowUp className="h-3 w-3" />
+                <span className="hidden sm:inline">{labels.backToTop}</span>
+              </button>
+            </div>
           </div>
         </div>
-
-        {/* Bottom row: copyright */}
-        <div className="mt-16 flex flex-col items-center justify-between gap-3 border-t border-primary-tint pt-6 pb-10 text-xs text-muted sm:flex-row sm:items-center">
-          <p className="text-center sm:text-start">
-            © <CurrentYear fallback={year} /> {siteConfig.siteName[l]} —{" "}
-            {footer.rights}
-          </p>
-          <p className="text-center text-muted/70 sm:text-end">
-            {labels.crafted}
-          </p>
-        </div>
-      </div>
+      </section>
     </footer>
   );
 }

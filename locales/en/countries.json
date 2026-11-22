@@ -1,0 +1,35 @@
+{
+  "arabWorld": {
+    "eyebrow": "Serving the Arab World",
+    "title": "From the Ocean to the Gulf",
+    "subtitle": "We aim to expand our knowledge to cover every Arab country — from the Atlantic Ocean to the Arabian Gulf. Pick your country's flag and let us welcome you in our own way.",
+    "cta": "Explore Arab Content",
+    "selectHint": "Select your country's flag to get a welcome message",
+    "welcomeDefault": "Welcome from {country} to Mosaqaf"
+  },
+  "welcomeFrom": {
+    "default": "Welcome from {country} to Mosaqaf",
+    "eg": "Welcome, child of the Nile 🇪🇬 — Egypt is always in our hearts",
+    "sa": "Welcome from the land of the Two Holy Mosques 🇸🇦 — you light up Mosaqaf",
+    "ae": "Welcome from the land of Zayed 🇦🇪 — the UAE is the home of ambition",
+    "kw": "Welcome from Kuwait 🇰🇼 — the land of generosity",
+    "qa": "Welcome from Qatar 🇶🇦 — the house of pride",
+    "bh": "Welcome from Bahrain 🇧🇭 — the pearl of the Gulf",
+    "om": "Welcome from Oman 🇴🇲 — the land of authenticity",
+    "ye": "Welcome from Yemen 🇾🇪 — the land of wisdom",
+    "jo": "Welcome from Jordan 🇯🇴 — the people of generosity",
+    "lb": "Welcome from Lebanon 🇱🇧 — the land of the cedar",
+    "sy": "Welcome from Syria 🇸🇾 — the cradle of civilization",
+    "ps": "Welcome from Palestine 🇵🇸 — Palestine is in our hearts",
+    "iq": "Welcome from Iraq 🇮🇶 — the land of the two rivers",
+    "ma": "Welcome from Morocco 🇲🇦 — the land of light",
+    "dz": "Welcome from Algeria 🇩🇿 — the land of a million martyrs",
+    "tn": "Welcome from Tunisia 🇹🇳 — the green land",
+    "ly": "Welcome from Libya 🇱🇾 — the land of Canaan",
+    "sd": "Welcome from Sudan 🇸🇩 — the land of the two Niles",
+    "mr": "Welcome from Mauritania 🇲🇷 — the land of Chinguetti",
+    "so": "Welcome from Somalia 🇸🇴 — the land of the Horn",
+    "dj": "Welcome from Djibouti 🇩🇯 — the gateway to the Red Sea",
+    "km": "Welcome from the Comoros 🇰🇲 — the islands of love"
+  }
+}

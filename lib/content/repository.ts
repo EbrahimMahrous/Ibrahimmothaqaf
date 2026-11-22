@@ -1,9 +1,9 @@
+// website/src/lib/content/repository.ts
 import { localProvider } from "./localProvider";
-import type { Guide, Project } from "./types";
+import type { Project } from "./types";
 
 // Content repository — single entry point used by pages.
-// Today it delegates to the local provider (JSON + TS data).
-// Swap to a DB/API provider later without touching the pages.
+// Guides/files are now served from the backend API (see lib/api.ts).
 
 type Locale = "ar" | "en";
 
@@ -12,10 +12,6 @@ function toLocale(locale: string): Locale {
 }
 
 export const contentRepository = {
-  getGuides(locale: string): Guide[] {
-    return localProvider.getGuides(toLocale(locale));
-  },
-
   getProjects(locale: string): Project[] {
     return localProvider.getProjects(toLocale(locale));
   },

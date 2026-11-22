@@ -2,13 +2,7 @@
 
 import { useState } from "react";
 import { subscribeToNewsletter } from "@/lib/api";
-
-interface NewsletterFormProps {
-  placeholder: string;
-  submitLabel: string;
-  successMessage?: string;
-  errorMessage?: string;
-}
+import type { NewsletterFormProps } from "@/types";
 
 export function NewsletterForm({
   placeholder,
@@ -30,12 +24,10 @@ export function NewsletterForm({
     setMessage("");
 
     try {
-      // Call backend API
       await subscribeToNewsletter(email);
       setStatus("success");
       setMessage(successMessage);
       setEmail("");
-      // Reset to idle after 5s
       setTimeout(() => {
         setStatus("idle");
         setMessage("");
@@ -53,11 +45,7 @@ export function NewsletterForm({
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="mx-auto w-full max-w-md"
-      noValidate
-    >
+    <form onSubmit={handleSubmit} className="w-full" noValidate>
       <div className="flex flex-col gap-2 sm:flex-row">
         <div className="relative flex-1">
           <input
@@ -88,14 +76,10 @@ export function NewsletterForm({
       </div>
 
       {message && status === "success" && (
-        <p className="mt-2 text-center text-xs font-medium text-primary sm:text-start">
-          {message}
-        </p>
+        <p className="mt-2 text-xs font-medium text-primary">{message}</p>
       )}
       {message && status === "error" && (
-        <p className="mt-2 text-center text-xs font-medium text-red-500 sm:text-start">
-          {message}
-        </p>
+        <p className="mt-2 text-xs font-medium text-red-500">{message}</p>
       )}
     </form>
   );

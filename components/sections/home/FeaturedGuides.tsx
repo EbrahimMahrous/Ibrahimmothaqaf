@@ -3,25 +3,8 @@
 import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
 import { SectionHeading } from "@/components/common/SectionHeading";
-import { GuideCard } from "@/components/cards/GuideCard";
-import type { Guide } from "@/lib/content/types";
-
-interface FeaturedGuidesProps {
-  locale: "ar" | "en";
-  eyebrow: string;
-  title: string;
-  subtitle: string;
-  cta: string;
-  guides: Guide[];
-  cardLabels: {
-    download: string;
-    video: string;
-    views: string;
-    downloads: string;
-    isNew: string;
-    categories: Record<string, string>;
-  };
-}
+import { FileCard } from "@/components/sections/library/FileCard";
+import type { FeaturedGuidesProps } from "@/types";
 
 export function FeaturedGuides({
   locale,
@@ -29,7 +12,7 @@ export function FeaturedGuides({
   title,
   subtitle,
   cta,
-  guides,
+  files,
   cardLabels,
 }: FeaturedGuidesProps) {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -37,18 +20,14 @@ export function FeaturedGuides({
   const [canNext, setCanNext] = useState(false);
   const isRtl = locale === "ar";
 
-  // Update prev/next state based on scroll position.
   const updateButtons = () => {
     const el = trackRef.current;
     if (!el) return;
     const { scrollLeft, scrollWidth, clientWidth } = el;
     const max = scrollWidth - clientWidth;
     const eps = 4;
-
-    // In RTL, scrollLeft is negative in modern browsers.
     const atStart = isRtl ? scrollLeft >= -eps : scrollLeft <= eps;
     const atEnd = isRtl ? scrollLeft <= -max + eps : scrollLeft >= max - eps;
-
     setCanPrev(!atStart);
     setCanNext(!atEnd);
   };
@@ -63,12 +42,11 @@ export function FeaturedGuides({
       el.removeEventListener("scroll", updateButtons);
       window.removeEventListener("resize", updateButtons);
     };
-  }, [guides.length, isRtl]);
+  }, [files.length, isRtl]);
 
   const scrollBy = (dir: 1 | -1) => {
     const el = trackRef.current;
     if (!el) return;
-    // Invert direction visually for RTL.
     const delta = dir * (el.clientWidth * 0.85);
     el.scrollBy({ left: isRtl ? -delta : delta, behavior: "smooth" });
   };
@@ -89,11 +67,13 @@ export function FeaturedGuides({
       const { scrollLeft, clientWidth } = el;
       const abs = Math.abs(scrollLeft);
       const idx = Math.round(abs / Math.max(clientWidth * 0.85, 1));
-      setActiveIndex(Math.min(idx, guides.length - 1));
+      setActiveIndex(Math.min(idx, files.length - 1));
     };
     el.addEventListener("scroll", onScroll, { passive: true });
     return () => el.removeEventListener("scroll", onScroll);
-  }, [guides.length]);
+  }, [files.length]);
+
+  if (files.length === 0) return null;
 
   return (
     <section className="relative">
@@ -107,7 +87,6 @@ export function FeaturedGuides({
             />
           </div>
 
-          {/* Prev/next buttons */}
           <div className="hidden shrink-0 gap-2 md:flex">
             <button
               type="button"
@@ -168,7 +147,6 @@ export function FeaturedGuides({
           </div>
         </div>
 
-        {/* Track */}
         <div className="relative mt-12">
           <div
             ref={trackRef}
@@ -179,27 +157,32 @@ export function FeaturedGuides({
               [&::-webkit-scrollbar]:hidden
             "
           >
-            {guides.map((guide, i) => (
+            {files.map((file, i) => (
               <div
-                key={guide.id}
-                className="
-                  snap-start shrink-0
-                  w-[85%] sm:w-[48%] lg:w-[31.5%]
-                "
+                key={file._id}
+                className="snap-start shrink-0 w-[85%] sm:w-[48%] lg:w-[31.5%]"
                 onClick={() => goTo(i)}
               >
                 <div className="reveal h-full">
-                  <GuideCard
-                    guide={guide}
+                  <FileCard
+                    file={file}
                     locale={locale}
-                    labels={cardLabels}
+                    labels={{
+                      download: cardLabels.download,
+                      watchVideo: cardLabels.watchVideo,
+                      preview: cardLabels.preview, // ← add
+                      views: cardLabels.views,
+                      downloads: cardLabels.downloads,
+                      isNew: cardLabels.isNew,
+                      featured: cardLabels.featured,
+                      categories: cardLabels.categories,
+                    }}
                   />
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Edge fades */}
           <div
             aria-hidden
             className="pointer-events-none absolute inset-y-0 inset-s-0 w-8 bg-linear-to-r from-canvas to-transparent rtl:bg-linear-to-l"
@@ -210,10 +193,9 @@ export function FeaturedGuides({
           />
         </div>
 
-        {/* Dots + CTA */}
         <div className="mt-8 flex items-center justify-between gap-6 reveal reveal-2">
           <div className="flex items-center gap-1.5">
-            {guides.map((_, i) => (
+            {files.map((_, i) => (
               <button
                 key={i}
                 type="button"

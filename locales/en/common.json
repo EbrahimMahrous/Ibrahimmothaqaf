@@ -54,20 +54,52 @@
     "switchAria": "Switch to",
     "brandHomeAria": "Home"
   },
+
+  "contactSection": {
+    "letsTalk": "Let's talk",
+    "gotIdea": "Got an idea?",
+    "buildTogether": "Let's build it together.",
+    "contactTitle": "Got a question or an idea?",
+    "contactSubtitle": "Message me and I'll reply personally as soon as I can — whether about managing a team, building a system, or a collaboration opportunity.",
+    "contactResponseTime": "Reply within 24-48 hours",
+    "contactAlt": "Or reach out directly",
+    "formName": "Name",
+    "formNamePlaceholder": "Your name",
+    "formEmail": "Email",
+    "formEmailPlaceholder": "you@example.com",
+    "formMessage": "Message",
+    "formMessagePlaceholder": "Tell me about your idea...",
+    "formSubmit": "Send message",
+    "formSuccess": "Sent! I'll reply soon.",
+    "formSending": "Sending...",
+    "formError": "Something went wrong, please try again.",
+    "faqTitle": "More questions?",
+    "faqViewAll": "View all FAQs"
+  },
+
+  "newsletterSection": {
+    "title": "Weekly Newsletter",
+    "subtitle": "Subscribe to get exclusive content every week — articles, guides, and practical lessons straight to your inbox.",
+    "placeholder": "Your email",
+    "submit": "Subscribe",
+    "success": "Subscribed successfully ✓",
+    "error": "Something went wrong, please try again.",
+    "hint": "Your email is safe. No spam, ever.",
+    "perks": {
+      "weekly": "Weekly exclusive content",
+      "noSpam": "No spam",
+      "unsubscribe": "Unsubscribe anytime"
+    }
+  },
+
   "footerLabels": {
     "contact": "Contact",
     "navigation": "Navigation",
     "follow": "Follow",
     "backToTop": "Back to top",
     "crafted": "Crafted with care",
-    "letsTalk": "Let's talk",
-    "gotIdea": "Got an idea?",
-    "buildTogether": "Let's build it together.",
     "emailMe": "Email me",
-    "newsletterLabel": "Subscribe to the newsletter",
-    "newsletterPlaceholder": "Your email",
-    "newsletterSubmit": "Subscribe",
-    "newsletterSuccess": "Subscribed successfully ✓",
+    "newsletterLabel": "Newsletter",
     "brandHomeAria": "Home",
     "signature": "IBRAHIM"
   }

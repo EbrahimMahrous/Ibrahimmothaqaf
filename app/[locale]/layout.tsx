@@ -23,7 +23,6 @@ const inter = Inter({
   display: "swap",
 });
 
-// Base metadata for the site.
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
 };
@@ -33,12 +32,10 @@ interface LayoutProps {
   params: Promise<{ locale: string }>;
 }
 
-// Pre-render each supported locale at build time.
 export async function generateStaticParams() {
   return siteConfig.locales.map((locale) => ({ locale }));
 }
 
-// Cache settings — refreshed via revalidateTag('settings')
 async function getCachedSettings() {
   "use cache";
   cacheLife("hours");
@@ -49,13 +46,11 @@ async function getCachedSettings() {
 export default async function LocaleLayout({ children, params }: LayoutProps) {
   const { locale } = await params;
 
-  // Reject unknown locales early.
   if (!isLocale(locale)) notFound();
 
   const t = getMessages(locale);
   const dir = locale === "ar" ? "rtl" : "ltr";
 
-  // Fetch site settings from backend (logo, social, whatsapp, email).
   const settings = await getCachedSettings();
 
   return (
@@ -82,7 +77,15 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
           locale={locale}
           footer={t.common.footer}
           nav={t.common.nav}
-          labels={t.common.footerLabels}
+          labels={{
+            contact: t.common.footerLabels.contact,
+            navigation: t.common.footerLabels.navigation,
+            follow: t.common.footerLabels.follow,
+            backToTop: t.common.footerLabels.backToTop,
+            crafted: t.common.footerLabels.crafted,
+            brandHomeAria: t.common.footerLabels.brandHomeAria,
+            signature: t.common.footerLabels.signature,
+          }}
           settings={settings}
         />
       </body>

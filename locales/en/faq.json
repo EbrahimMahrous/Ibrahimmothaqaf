@@ -1,0 +1,118 @@
+{
+  "hero": {
+    "eyebrow": "Help Center",
+    "title": "Frequently Asked Questions",
+    "subtitle": "Everything you need to know about Mosaqaf, content, and collaboration."
+  },
+  "search": {
+    "placeholder": "Search questions...",
+    "clear": "Clear",
+    "resultsCount": "{count} questions",
+    "noResultsTitle": "No results",
+    "noResultsSubtitle": "Try a different search"
+  },
+  "categories": {
+    "all": "All",
+    "general": "General",
+    "content": "Content",
+    "collaboration": "Collaboration",
+    "technical": "Technical"
+  },
+  "cta": {
+    "title": "Still have a question?",
+    "subtitle": "Can't find an answer? Message me and I'll reply personally.",
+    "button": "Contact me"
+  },
+  "items": [
+    {
+      "id": "q1",
+      "category": "general",
+      "question": "What is Mosaqaf?",
+      "answer": "Mosaqaf is a knowledge platform aiming to spread awareness and culture in the Arab world. We offer authentic content on management, leadership, and systems, with practical guides based on real experience."
+    },
+    {
+      "id": "q2",
+      "category": "general",
+      "question": "Who's behind Mosaqaf?",
+      "answer": "Mosaqaf was started by Ibrahim Mahrous, an Operations Manager for UAE brands. The project reflects his practical experience running 9 departments and building systems that run independently."
+    },
+    {
+      "id": "q3",
+      "category": "content",
+      "question": "Is the content free or paid?",
+      "answer": "All content on Mosaqaf is completely free — articles, guides, and downloadable files. Our goal is spreading knowledge without barriers."
+    },
+    {
+      "id": "q4",
+      "category": "content",
+      "question": "How do I download files and guides?",
+      "answer": "Every file in the library has a direct download button. No signup or account required — just click 'Download' and the file downloads instantly."
+    },
+    {
+      "id": "q5",
+      "category": "content",
+      "question": "Are there videos linked to the guides?",
+      "answer": "Yes, every guide is linked to a YouTube video that explains the idea in depth. You'll find the video link inside each guide page."
+    },
+    {
+      "id": "q6",
+      "category": "content",
+      "question": "Is content only in Arabic or also English?",
+      "answer": "The entire site is available in both Arabic and English. You can switch languages from the language button at the top of the page."
+    },
+    {
+      "id": "q7",
+      "category": "collaboration",
+      "question": "How can I contact you?",
+      "answer": "You can reach me through the contact form on the home page, by direct email, or on WhatsApp. I respond to every message as soon as possible."
+    },
+    {
+      "id": "q8",
+      "category": "collaboration",
+      "question": "Do you accept consultations or collaborations?",
+      "answer": "Yes, I'm open to collaboration on projects related to management, system building, and content development. Message me and we'll see how we can help each other."
+    },
+    {
+      "id": "q9",
+      "category": "collaboration",
+      "question": "Do you offer training or workshops?",
+      "answer": "I don't currently offer direct training, but we can discuss custom workshops for your team or company. Contact me for details."
+    },
+    {
+      "id": "q10",
+      "category": "technical",
+      "question": "When does the newsletter arrive?",
+      "answer": "A weekly newsletter arrives every Sunday. It includes exclusive content not on the site, article summaries, and new guides."
+    },
+    {
+      "id": "q11",
+      "category": "technical",
+      "question": "How do I unsubscribe from the newsletter?",
+      "answer": "Every newsletter email has an 'Unsubscribe' link at the bottom. One click and you're removed instantly."
+    },
+    {
+      "id": "q12",
+      "category": "technical",
+      "question": "Is the site mobile-friendly?",
+      "answer": "Yes, the site is fully responsive. You can browse, download files, and subscribe to the newsletter from mobile easily."
+    },
+    {
+      "id": "q13",
+      "category": "general",
+      "question": "Do you accept guest articles?",
+      "answer": "Possibly, if the content aligns with Mosaqaf's message. Send me the article idea and if suitable, we'll publish it with your name."
+    },
+    {
+      "id": "q14",
+      "category": "content",
+      "question": "How can I suggest a topic?",
+      "answer": "Message me and I'd love to hear. Reader ideas are one of the most important content sources at Mosaqaf."
+    },
+    {
+      "id": "q15",
+      "category": "technical",
+      "question": "Files open instead of downloading?",
+      "answer": "If a PDF opens directly in the browser, right-click and choose 'Save as'. Or use the download button on the file page."
+    }
+  ]
+}

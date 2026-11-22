@@ -8,6 +8,8 @@ import arAbout from "@/locales/ar/about.json";
 import arLibrary from "@/locales/ar/library.json";
 import arMothaqaf from "@/locales/ar/mothaqaf.json";
 import arProjects from "@/locales/ar/projects.json";
+import arCountries from "@/locales/ar/countries.json";
+import arFaq from "@/locales/ar/faq.json";
 
 import enCommon from "@/locales/en/common.json";
 import enHome from "@/locales/en/home.json";
@@ -15,6 +17,8 @@ import enAbout from "@/locales/en/about.json";
 import enLibrary from "@/locales/en/library.json";
 import enMothaqaf from "@/locales/en/mothaqaf.json";
 import enProjects from "@/locales/en/projects.json";
+import enCountries from "@/locales/en/countries.json";
+import enFaq from "@/locales/en/faq.json";
 
 import type { Locale } from "@/config/site.config";
 
@@ -27,6 +31,9 @@ export const messages = {
     library: arLibrary,
     mothaqaf: arMothaqaf,
     projects: arProjects,
+    arabWorld: arCountries.arabWorld,
+    welcomeFrom: arCountries.welcomeFrom,
+    faq: arFaq,
   },
   en: {
     common: enCommon,
@@ -35,6 +42,9 @@ export const messages = {
     library: enLibrary,
     mothaqaf: enMothaqaf,
     projects: enProjects,
+    arabWorld: enCountries.arabWorld,
+    welcomeFrom: enCountries.welcomeFrom,
+    faq: enFaq,
   },
 } as const;
 

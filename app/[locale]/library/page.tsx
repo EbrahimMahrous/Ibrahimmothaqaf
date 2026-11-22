@@ -7,7 +7,6 @@ import { LibraryGrid } from "@/components/sections/library/LibraryGrid";
 import { fetchFiles } from "@/lib/api";
 import { cacheLife, cacheTag } from "next/cache";
 
-// Disable instant navigation validation for this segment.
 export const instant = false;
 
 interface PageProps {
@@ -32,7 +31,7 @@ async function getCachedFiles() {
   "use cache";
   cacheLife("minutes");
   cacheTag("files");
-  return await fetchFiles();
+  return await fetchFiles({ limit: 100 });
 }
 
 export default async function LibraryPage({ params }: PageProps) {
@@ -42,25 +41,8 @@ export default async function LibraryPage({ params }: PageProps) {
 
   const files = await getCachedFiles();
 
-  // Map backend files into the shape expected by LibraryGrid.
-  const guides = files.map((f) => ({
-    id: f._id,
-    slug: f._id,
-    title: f.title,
-    description: f.description,
-    cover: "/images/placeholder.jpg",
-    category: "files",
-    stats: {
-      views: 0,
-      downloads: f.downloads,
-    },
-    video: false,
-    downloadUrl: f.url,
-    createdAt: f.createdAt,
-    language: l,
-  }));
-
   const totalDownloads = files.reduce((s, f) => s + f.downloads, 0);
+  const totalViews = files.reduce((s, f) => s + f.views, 0);
 
   return (
     <>
@@ -81,7 +63,7 @@ export default async function LibraryPage({ params }: PageProps) {
             <LibraryStats
               totalVideos={files.length}
               totalDownloads={totalDownloads}
-              totalViews={0}
+              totalViews={totalViews}
               labels={t.library.stats}
               locale={l}
             />
@@ -92,17 +74,19 @@ export default async function LibraryPage({ params }: PageProps) {
       <section className="section pt-0">
         <div className="container-editorial">
           <LibraryGrid
-            guides={guides as any}
+            files={files}
             locale={l}
             labels={{
               filters: t.library.filters,
               categories: t.library.categories,
               card: {
                 download: t.library.card.download,
-                video: t.library.card.video,
+                watchVideo: t.library.card.watchVideo,
+                preview: t.library.card.preview, // ← new
                 views: t.library.stats.views,
                 downloads: t.library.stats.downloads,
                 isNew: t.library.card.new,
+                featured: t.library.card.featured,
               },
             }}
           />

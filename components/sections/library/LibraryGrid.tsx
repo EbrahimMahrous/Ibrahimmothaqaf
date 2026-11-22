@@ -1,43 +1,26 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { GuideCard } from "@/components/cards/GuideCard";
+import { FileCard } from "./FileCard";
 import { LibraryFilters } from "./LibraryFilters";
-import type { Guide, GuideCategory } from "@/lib/content/types";
+import type { LibraryGridProps, CategoryFilter } from "@/types";
 
-interface LibraryGridProps {
-  guides: Guide[];
-  /** Locale used for number formatting inside cards. */
-  locale: "ar" | "en";
-  labels: {
-    filters: { all: string; searchPlaceholder: string; emptyState: string };
-    categories: Record<string, string>;
-    card: {
-      download: string;
-      video: string;
-      views: string;
-      downloads: string;
-      isNew: string;
-    };
-  };
-}
-
-export function LibraryGrid({ guides, locale, labels }: LibraryGridProps) {
-  const [category, setCategory] = useState<GuideCategory | "all">("all");
+export function LibraryGrid({ files, locale, labels }: LibraryGridProps) {
+  const [category, setCategory] = useState<CategoryFilter>("all");
   const [query, setQuery] = useState("");
 
-  // Filter guides by category + free-text query.
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return guides.filter((g) => {
-      const matchCat = category === "all" || g.category === category;
+    return files.filter((f) => {
+      const matchCat = category === "all" || f.category === category;
       const matchQuery =
         !q ||
-        g.title.toLowerCase().includes(q) ||
-        g.description.toLowerCase().includes(q);
+        f.title.toLowerCase().includes(q) ||
+        (f.description || "").toLowerCase().includes(q) ||
+        (f.tags || []).some((t) => t.toLowerCase().includes(q));
       return matchCat && matchQuery;
     });
-  }, [guides, category, query]);
+  }, [files, category, query]);
 
   return (
     <div className="space-y-8">
@@ -57,23 +40,25 @@ export function LibraryGrid({ guides, locale, labels }: LibraryGridProps) {
         </p>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((guide, i) => (
+          {filtered.map((file, i) => (
             <div
-              key={guide.id}
+              key={file._id}
               className={[
                 "reveal",
                 i === 0 ? "reveal-1" : i === 1 ? "reveal-2" : "reveal-3",
               ].join(" ")}
             >
-              <GuideCard
-                guide={guide}
+              <FileCard
+                file={file}
                 locale={locale}
                 labels={{
                   download: labels.card.download,
-                  video: labels.card.video,
+                  watchVideo: labels.card.watchVideo,
+                  preview: labels.card.preview,
                   views: labels.card.views,
                   downloads: labels.card.downloads,
                   isNew: labels.card.isNew,
+                  featured: labels.card.featured,
                   categories: labels.categories,
                 }}
               />

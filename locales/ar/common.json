@@ -54,20 +54,52 @@
     "switchAria": "التبديل إلى",
     "brandHomeAria": "الصفحة الرئيسية"
   },
+
+  "contactSection": {
+    "letsTalk": "خلّينا نتواصل",
+    "gotIdea": "عندك فكرة؟",
+    "buildTogether": "خلّينا نبنيها سوا.",
+    "contactTitle": "عندك سؤال أو فكرة؟",
+    "contactSubtitle": "راسلني وهرد عليك شخصيًا في أقرب وقت — سواء عن إدارة فريق، بناء نظام، أو فرصة تعاون.",
+    "contactResponseTime": "الرد خلال 24-48 ساعة",
+    "contactAlt": "أو تواصل مباشرة",
+    "formName": "الاسم",
+    "formNamePlaceholder": "اسمك",
+    "formEmail": "الإيميل",
+    "formEmailPlaceholder": "you@example.com",
+    "formMessage": "الرسالة",
+    "formMessagePlaceholder": "احكيلي عن فكرتك...",
+    "formSubmit": "إرسال الرسالة",
+    "formSuccess": "تم الإرسال! هرد عليك قريب.",
+    "formSending": "جاري الإرسال...",
+    "formError": "حصل خطأ، جرب تاني.",
+    "faqTitle": "عندك سؤال تاني؟",
+    "faqViewAll": "كل الأسئلة الشائعة"
+  },
+
+  "newsletterSection": {
+    "title": "النشرة الأسبوعية",
+    "subtitle": "اشترك ليوصلك محتوى حصري كل أسبوع — مقالات، أدلة، وتجارب عملية مباشرة في بريدك.",
+    "placeholder": "بريدك الإلكتروني",
+    "submit": "اشترك",
+    "success": "تم الاشتراك بنجاح ✓",
+    "error": "حصل خطأ، جرب تاني.",
+    "hint": "بريدك في أمان. مفيش spam أبداً.",
+    "perks": {
+      "weekly": "محتوى حصري أسبوعي",
+      "noSpam": "بدون إزعاج",
+      "unsubscribe": "إلغاء الاشتراك في أي وقت"
+    }
+  },
+
   "footerLabels": {
     "contact": "تواصل",
     "navigation": "التنقل",
     "follow": "تابعني",
     "backToTop": "إلى الأعلى",
     "crafted": "صُنع بعناية",
-    "letsTalk": "خلّينا نتواصل",
-    "gotIdea": "عندك فكرة؟",
-    "buildTogether": "خلّينا نبنيها سوا.",
     "emailMe": "راسلني",
-    "newsletterLabel": "اشترك في النشرة",
-    "newsletterPlaceholder": "بريدك الإلكتروني",
-    "newsletterSubmit": "اشترك",
-    "newsletterSuccess": "تم الاشتراك بنجاح ✓",
+    "newsletterLabel": "النشرة البريدية",
     "brandHomeAria": "الصفحة الرئيسية",
     "signature": "إبراهيم"
   }
