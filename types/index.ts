@@ -7,10 +7,39 @@ export interface HeroImage {
   url: string;
   publicId: string;
   alt: string;
+
+  // Optional display metadata
+  title?: string;
+  description?: string;
+  badge?: "" | "new" | "featured" | "video";
+
+  // Optional link to a DownloadFile (populated object or raw id)
+  fileId?:
+    | string
+    | {
+        _id: string;
+        title: string;
+        format: string;
+        size: number;
+        downloads: number;
+        views: number;
+        videoUrl?: string;
+      }
+    | null;
+
+  // Optional external video (YouTube/Vimeo) + CTA
+  videoUrl?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+
+  // Stats
+  views?: number;
+  clicks?: number;
+
   order: number;
   createdAt: string;
+  updatedAt?: string;
 }
-
 export interface DownloadFile {
   _id: string;
   title: string;

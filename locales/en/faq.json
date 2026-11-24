@@ -2,14 +2,14 @@
   "hero": {
     "eyebrow": "Help Center",
     "title": "Frequently Asked Questions",
-    "subtitle": "Everything you need to know about Mosaqaf, content, and collaboration."
+    "subtitle": "Everything you need to know about Mosaqaf, content, and collaboration — no fluff."
   },
   "search": {
     "placeholder": "Search questions...",
     "clear": "Clear",
     "resultsCount": "{count} questions",
     "noResultsTitle": "No results",
-    "noResultsSubtitle": "Try a different search"
+    "noResultsSubtitle": "Try a different search or reach out directly"
   },
   "categories": {
     "all": "All",
@@ -20,99 +20,105 @@
   },
   "cta": {
     "title": "Still have a question?",
-    "subtitle": "Can't find an answer? Message me and I'll reply personally.",
+    "subtitle": "Can't find an answer? Message me and I'll reply personally within 24-48 hours.",
     "button": "Contact me"
   },
   "items": [
     {
       "id": "q1",
       "category": "general",
-      "question": "What is Mosaqaf?",
-      "answer": "Mosaqaf is a knowledge platform aiming to spread awareness and culture in the Arab world. We offer authentic content on management, leadership, and systems, with practical guides based on real experience."
+      "question": "What makes Mosaqaf different from any other management blog?",
+      "answer": "Most Arabic management content is either theoretical translations or motivational fluff. Mosaqaf offers a third option: practical systems built on real experience running 9 departments for UAE brands. Every guide here has actually been used in a real work environment — not just written on paper. The difference is you won't just read 'how to build a system' — you'll see the actual system, step by step, with the documents and tools I used."
     },
     {
       "id": "q2",
       "category": "general",
-      "question": "Who's behind Mosaqaf?",
-      "answer": "Mosaqaf was started by Ibrahim Mahrous, an Operations Manager for UAE brands. The project reflects his practical experience running 9 departments and building systems that run independently."
+      "question": "Who is Ibrahim Mahrous? What makes him qualified to talk about management?",
+      "answer": "Ibrahim Mahrous is an Operations Manager for UAE brands and has been working in systems and operations management for years. His experience isn't from books — it's from actually running 9 departments and building systems that operate without daily intervention. Mosaqaf is an attempt to document that experience so anyone can benefit from it instead of starting from scratch."
     },
     {
       "id": "q3",
-      "category": "content",
-      "question": "Is the content free or paid?",
-      "answer": "All content on Mosaqaf is completely free — articles, guides, and downloadable files. Our goal is spreading knowledge without barriers."
+      "category": "general",
+      "question": "Who exactly is this content for?",
+      "answer": "Mosaqaf isn't for everyone. It's for: (1) new managers still building their systems, (2) entrepreneurs trying to get out of 'I do everything myself', (3) anyone in operations who feels work is consuming them more than building them. If you're looking for '10 habits of successful managers' — this isn't your place. If you're looking for a real operating system — welcome."
     },
     {
       "id": "q4",
       "category": "content",
-      "question": "How do I download files and guides?",
-      "answer": "Every file in the library has a direct download button. No signup or account required — just click 'Download' and the file downloads instantly."
+      "question": "Is the content really free? Where's the catch?",
+      "answer": "Yes, completely free — no paid subscription, no locked content, no 'part 2 is for subscribers'. The interest is simple: building professional reputation and reaching serious people I might collaborate with on consulting or projects. No hidden agenda — whoever wants to benefit, benefits."
     },
     {
       "id": "q5",
       "category": "content",
-      "question": "Are there videos linked to the guides?",
-      "answer": "Yes, every guide is linked to a YouTube video that explains the idea in depth. You'll find the video link inside each guide page."
+      "question": "How do I know the content isn't just theory?",
+      "answer": "Three things: (1) every guide includes real documents (templates, forms, checklists) you can download and use immediately, (2) linked videos explain the real context where the system was applied, (3) no content is published without actually being implemented. If you find something purely theoretical — message me and I'll fix it."
     },
     {
       "id": "q6",
       "category": "content",
-      "question": "Is content only in Arabic or also English?",
-      "answer": "The entire site is available in both Arabic and English. You can switch languages from the language button at the top of the page."
+      "question": "What exactly do I do with the files I download?",
+      "answer": "Every file is ready for direct use — no editing needed. You'll find: Excel templates for operations management, performance review forms, daily tracking checklists, and PDF guides with implementation steps. These files have worked in real work environments, so you can use them as-is or adapt them to your context."
     },
     {
       "id": "q7",
-      "category": "collaboration",
-      "question": "How can I contact you?",
-      "answer": "You can reach me through the contact form on the home page, by direct email, or on WhatsApp. I respond to every message as soon as possible."
+      "category": "content",
+      "question": "Are there actual videos or just random YouTube links?",
+      "answer": "Every video is linked to a specific guide and explains the same idea in greater depth. Not motivational videos — practical explanation videos. If the guide is about 'meeting management', the video will be about how to actually run a meeting, not about 'the importance of meetings'."
     },
     {
       "id": "q8",
-      "category": "collaboration",
-      "question": "Do you accept consultations or collaborations?",
-      "answer": "Yes, I'm open to collaboration on projects related to management, system building, and content development. Message me and we'll see how we can help each other."
+      "category": "content",
+      "question": "Why is the content only in Arabic? Wouldn't English be more useful?",
+      "answer": "The core content is in Arabic because the gap in practical Arabic content is much bigger. But the site itself is available in both Arabic and English, and some guides and files have English versions. If you need specific English content — message me and I'll try to provide it."
     },
     {
       "id": "q9",
-      "category": "collaboration",
-      "question": "Do you offer training or workshops?",
-      "answer": "I don't currently offer direct training, but we can discuss custom workshops for your team or company. Contact me for details."
+      "category": "content",
+      "question": "How do I suggest a topic or request specific content?",
+      "answer": "Message me directly — every suggestion gets read. I won't promise to publish everything, but I promise to reply to every suggestion. Reader ideas are a primary source for new content, and if the suggestion fits, you'll find the content on the site soon."
     },
     {
       "id": "q10",
-      "category": "technical",
-      "question": "When does the newsletter arrive?",
-      "answer": "A weekly newsletter arrives every Sunday. It includes exclusive content not on the site, article summaries, and new guides."
+      "category": "collaboration",
+      "question": "Do you offer paid consulting? What's the difference from the free content?",
+      "answer": "Free content covers general principles and ready-made systems. Paid consulting is tailored to your exact context — we study your company's situation and build a custom solution. So content tells you 'how to build a system', and consulting tells you 'how to build YOUR system'. If interested — message me and we'll talk."
     },
     {
       "id": "q11",
-      "category": "technical",
-      "question": "How do I unsubscribe from the newsletter?",
-      "answer": "Every newsletter email has an 'Unsubscribe' link at the bottom. One click and you're removed instantly."
+      "category": "collaboration",
+      "question": "Do you accept guest articles? What are the conditions?",
+      "answer": "Yes, with one condition: the content must be practical and based on real experience — not theoretical or motivational. If you have experience in management or operations and want to document it, send me the idea and we'll see. Published articles are published under your name and can include a link to your site or account."
     },
     {
       "id": "q12",
-      "category": "technical",
-      "question": "Is the site mobile-friendly?",
-      "answer": "Yes, the site is fully responsive. You can browse, download files, and subscribe to the newsletter from mobile easily."
+      "category": "collaboration",
+      "question": "Do you offer workshops or corporate training?",
+      "answer": "I don't currently offer open group training. But I do offer custom workshops for a specific team or company — built on the company's actual need, not ready-made content. If your company needs training in management or system building, message me and we'll see how to make something genuinely useful."
     },
     {
       "id": "q13",
-      "category": "general",
-      "question": "Do you accept guest articles?",
-      "answer": "Possibly, if the content aligns with Mosaqaf's message. Send me the article idea and if suitable, we'll publish it with your name."
+      "category": "collaboration",
+      "question": "What's the best way to reach you?",
+      "answer": "Depends on the topic: (1) for quick questions — WhatsApp is fastest, (2) for suggestions or collaboration — email is better so I can reply in detail, (3) for consulting — the contact form on the home page so I understand the full context. In all cases, I reply within 24-48 hours."
     },
     {
       "id": "q14",
-      "category": "content",
-      "question": "How can I suggest a topic?",
-      "answer": "Message me and I'd love to hear. Reader ideas are one of the most important content sources at Mosaqaf."
+      "category": "technical",
+      "question": "The newsletter — what exactly will I receive?",
+      "answer": "A weekly newsletter every Sunday with: (1) an exclusive guide or article not published on the site, (2) a practical summary of the week's most important idea, (3) a new tool or template ready to download. No ads, no promotional content, no 'exclusive offers'. Just practical content."
     },
     {
       "id": "q15",
       "category": "technical",
-      "question": "Files open instead of downloading?",
-      "answer": "If a PDF opens directly in the browser, right-click and choose 'Save as'. Or use the download button on the file page."
+      "question": "Why do PDF files open instead of downloading?",
+      "answer": "That's browser behavior — some browsers display PDFs directly instead of downloading them. You have 3 solutions: (1) from the file page, click 'Download' instead of 'Preview', (2) after it opens, press Ctrl+S (or Cmd+S on Mac) and choose 'Save as', (3) right-click the file link and choose 'Save link as'. If the problem persists — message me and I'll send you the file directly."
+    },
+    {
+      "id": "q16",
+      "category": "technical",
+      "question": "The site supports Arabic and English — how do I switch?",
+      "answer": "From the language button at the top of the page (globe icon). Switching is instant without losing your place on the page. Core content is Arabic, but the interface and navigation are also available in English."
     }
   ]
 }

@@ -11,7 +11,7 @@ import {
   Star,
   BookOpen,
 } from "lucide-react";
-import { getDownloadUrl } from "@/lib/api";
+import { getDownloadUrl, getViewUrl } from "@/lib/api";
 import { FileViewer } from "./FileViewer";
 import type { FileCardProps } from "@/types";
 
@@ -31,110 +31,105 @@ function formatBytes(bytes: number): string {
 }
 
 export function FileCard({ file, locale, labels }: FileCardProps) {
-  const [viewerOpen, setViewerOpen] = useState(false);
-  const cover = file.coverImage;
+  const [videoOpen, setVideoOpen] = useState(false);
   const categoryLabel = labels.categories[file.category] || file.category;
+
+  const handlePreview = () => {
+    window.open(getViewUrl(file._id), "_blank", "noopener,noreferrer");
+  };
 
   return (
     <>
-      <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-primary-tint bg-surface/70 backdrop-blur-sm transition hover:border-primary hover:shadow-(--shadow-soft)">
-        {/* Cover */}
-        <div className="relative aspect-video bg-primary-tint">
-          {cover ? (
+      <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-primary-tint bg-surface/70 backdrop-blur-sm transition hover:border-primary hover:shadow-(--shadow-soft)">
+        {/* Large cover */}
+        <div className="relative aspect-4/5 bg-primary-tint overflow-hidden">
+          {file.coverImage ? (
             <Image
-              src={cover}
+              src={file.coverImage}
               alt={file.title}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className="object-cover"
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">
-              <FileText className="h-12 w-12 text-primary/40" />
+              <FileText className="h-16 w-16 text-primary/40" />
             </div>
           )}
 
+          {/* Dark gradient overlay at bottom */}
+          <div className="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-black/80 via-black/40 to-transparent" />
+
+          {/* Badges */}
           {file.isNew && (
-            <span className="absolute inset-s-2 top-2 inline-flex items-center gap-1 rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold text-white">
+            <span className="absolute inset-s-3 top-3 inline-flex items-center gap-1 rounded-full bg-accent px-2.5 py-1 text-[10px] font-semibold text-white z-10">
               <Sparkles className="h-3 w-3" /> {labels.isNew}
             </span>
           )}
           {file.isFeatured && (
-            <span className="absolute inset-e-2 top-2 inline-flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold text-white">
+            <span className="absolute inset-e-3 top-3 inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-[10px] font-semibold text-white z-10">
               <Star className="h-3 w-3" /> {labels.featured}
             </span>
           )}
 
-          <span className="absolute bottom-2 inset-s-2 inline-flex items-center gap-1 rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-medium text-white">
-            <FileText className="h-3 w-3" />
-            {file.format?.toUpperCase() || "FILE"} · {formatBytes(file.size)}
-          </span>
-        </div>
-
-        {/* Body */}
-        <div className="flex flex-1 flex-col gap-3 p-4">
-          <div>
-            <p className="text-xs uppercase tracking-wider text-muted">
+          {/* Bottom content on cover */}
+          <div className="absolute inset-x-0 bottom-0 p-4 text-white">
+            <p className="text-[10px] uppercase tracking-wider text-white/70">
               {categoryLabel}
             </p>
-            <h3 className="mt-1 line-clamp-2 text-base font-semibold text-text">
+            <h3 className="mt-1 line-clamp-2 text-lg font-bold leading-tight">
               {file.title}
             </h3>
-            {file.description && (
-              <p className="mt-1 line-clamp-2 text-sm text-muted">
-                {file.description}
-              </p>
-            )}
-          </div>
-
-          <div className="flex items-center justify-between text-xs text-muted">
-            <span className="inline-flex items-center gap-1">
-              <Download className="h-3 w-3" />{" "}
-              {formatNumber(file.downloads, locale)}
-            </span>
-            <span className="inline-flex items-center gap-1">
-              <Eye className="h-3 w-3" /> {formatNumber(file.views, locale)}
-            </span>
-          </div>
-
-          {/* Actions */}
-          <div className="mt-auto flex flex-col gap-2">
-            {file.videoUrl && (
-              <button
-                onClick={() => setViewerOpen(true)}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-primary px-4 py-2 text-sm font-medium text-primary transition hover:bg-primary hover:text-white"
-              >
-                <Play className="h-4 w-4" />
-                {labels.watchVideo}
-              </button>
-            )}
-
-            <div className="flex gap-2">
-              <button
-                onClick={() => setViewerOpen(true)}
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-primary px-4 py-2 text-sm font-medium text-primary transition hover:bg-primary hover:text-white"
-              >
-                <BookOpen className="h-4 w-4" />
-                {labels.preview}
-              </button>
-              <a
-                href={getDownloadUrl(file._id)}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-white transition hover:opacity-90"
-              >
-                <Download className="h-4 w-4" />
-                {labels.download}
-              </a>
+            <div className="mt-2 flex items-center gap-3 text-[11px] text-white/70">
+              <span className="inline-flex items-center gap-1">
+                <FileText className="h-3 w-3" />
+                {file.format?.toUpperCase() || "FILE"}
+              </span>
+              <span>·</span>
+              <span>{formatBytes(file.size)}</span>
+              <span>·</span>
+              <span className="inline-flex items-center gap-1">
+                <Eye className="h-3 w-3" />
+                {formatNumber(file.views, locale)}
+              </span>
             </div>
           </div>
         </div>
+
+        {/* Bottom action bar */}
+        <div className="flex items-center gap-2 p-3">
+          <button
+            onClick={handlePreview}
+            className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full border border-primary px-3 py-2 text-xs font-medium text-primary transition hover:bg-primary hover:text-white"
+          >
+            <BookOpen className="h-3.5 w-3.5" />
+            {labels.preview}
+          </button>
+          <a
+            href={getDownloadUrl(file._id)}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full bg-primary px-3 py-2 text-xs font-semibold text-white transition hover:opacity-90"
+          >
+            <Download className="h-3.5 w-3.5" />
+            {labels.download}
+          </a>
+          {file.videoUrl && (
+            <button
+              onClick={() => setVideoOpen(true)}
+              aria-label={labels.watchVideo}
+              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent text-white transition hover:opacity-90"
+            >
+              <Play className="h-4 w-4" />
+            </button>
+          )}
+        </div>
       </article>
 
-      {viewerOpen && (
+      {videoOpen && (
         <FileViewer
           file={file}
-          onClose={() => setViewerOpen(false)}
+          onClose={() => setVideoOpen(false)}
           labels={{
             preview: labels.preview,
             download: labels.download,
@@ -142,8 +137,8 @@ export function FileCard({ file, locale, labels }: FileCardProps) {
             openNewTab: locale === "ar" ? "فتح في تاب جديد" : "Open in new tab",
             unsupported:
               locale === "ar"
-                ? "المعاينة غير متاحة لهذا النوع، استخدم التنزيل."
-                : "Preview not supported for this type. Please download.",
+                ? "المعاينة غير متاحة."
+                : "Preview not supported.",
           }}
         />
       )}

@@ -5,6 +5,7 @@ import "../globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { BackgroundFX } from "@/components/common/BackgroundFX";
+import { FloatingGame } from "@/components/games/FloatingGame";
 import { getMessages, isLocale } from "@/lib/i18n";
 import { siteConfig } from "@/config/site.config";
 import { fetchSettings } from "@/lib/api";
@@ -88,6 +89,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
           }}
           settings={settings}
         />
+        <FloatingGame />
       </body>
     </html>
   );

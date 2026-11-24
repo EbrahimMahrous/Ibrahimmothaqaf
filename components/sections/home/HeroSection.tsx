@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { HeroPortraits } from "./HeroPortraits";
+import type { HeroImage } from "@/types";
 
 interface HeroSectionProps {
   locale: string;
@@ -9,8 +10,16 @@ interface HeroSectionProps {
   primaryCta: { label: string; href: string };
   secondaryCta: { label: string; href: string };
   features: { title: string; description: string }[];
-  portraits: { src: string; alt: string }[];
+  portraits: HeroImage[]; // ← HeroImage[] بدل {src, alt}[]
   carouselLabels?: { prev: string; next: string };
+  portraitLabels: {
+    viewFile: string;
+    watchVideo: string;
+    openNewTab: string;
+    unsupported: string;
+    preview: string;
+    download: string;
+  };
 }
 
 export function HeroSection({
@@ -22,6 +31,7 @@ export function HeroSection({
   features,
   portraits,
   carouselLabels,
+  portraitLabels,
 }: HeroSectionProps) {
   return (
     <section className="relative overflow-hidden pt-16 pb-24">
@@ -67,6 +77,7 @@ export function HeroSection({
           portraits={portraits}
           prevLabel={carouselLabels?.prev}
           nextLabel={carouselLabels?.next}
+          labels={portraitLabels}
         />
       </div>
 

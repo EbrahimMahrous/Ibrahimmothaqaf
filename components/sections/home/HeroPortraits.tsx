@@ -3,77 +3,73 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
-interface Portrait {
-  src: string;
-  alt: string;
-  title?: string;
-  description?: string;
-  href?: string;
-}
+import { BookOpen, Play, ExternalLink, Sparkles, Star } from "lucide-react";
+import {
+  getViewUrl,
+  incrementHeroClick,
+  incrementHeroView,
+  toEmbedUrl,
+} from "@/lib/api";
+import { FileViewer } from "@/components/sections/library/FileViewer";
+import type { HeroImage } from "@/types";
 
 interface HeroPortraitsProps {
-  portraits: Portrait[];
+  portraits: HeroImage[];
   prevLabel?: string;
   nextLabel?: string;
+  labels: {
+    viewFile: string;
+    watchVideo: string;
+    openNewTab: string;
+    unsupported: string;
+    preview: string;
+    download: string;
+  };
 }
 
 export function HeroPortraits({
   portraits,
   prevLabel = "Previous",
   nextLabel = "Next",
+  labels,
 }: HeroPortraitsProps) {
   const total = portraits.length;
-
-  // Start from the middle portrait so the 3D depth effect is visible on load.
   const [active, setActive] = useState(Math.floor(total / 2));
   const [paused, setPaused] = useState(false);
-  const [lightbox, setLightbox] = useState<number | null>(null);
+  const [videoOpen, setVideoOpen] = useState<HeroImage | null>(null);
   const [hoveredActive, setHoveredActive] = useState(false);
 
-  // Drag tracking — a pointerdown stores the start X; a pointerup computes the delta.
   const dragStartX = useRef<number | null>(null);
   const draggedRef = useRef(false);
 
-  // ─── Navigation ────────────────────────────────────────────
-  // Infinite wrap-around prev/next.
   const goPrev = useCallback(
     () => setActive((v) => (v - 1 + total) % total),
     [total],
   );
   const goNext = useCallback(() => setActive((v) => (v + 1) % total), [total]);
 
-  // ─── Auto-play ─────────────────────────────────────────────
-  // Pause while hovering, while the lightbox is open, or while dragging.
   useEffect(() => {
-    if (paused || lightbox !== null) return;
+    if (paused || videoOpen) return;
     const id = setInterval(() => {
       setActive((v) => (v + 1) % total);
-    }, 4500);
+    }, 5000);
     return () => clearInterval(id);
-  }, [paused, total, lightbox]);
+  }, [paused, total, videoOpen]);
 
-  // ─── Keyboard shortcuts ────────────────────────────────────
-  // Arrows navigate. Escape closes the lightbox.
+  useEffect(() => {
+    const current = portraits[active];
+    if (current?._id) incrementHeroView(current._id);
+  }, [active, portraits]);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (lightbox !== null) {
-        if (e.key === "Escape") setLightbox(null);
-        if (e.key === "ArrowRight")
-          setLightbox((v) => (v === null ? v : (v + 1) % total));
-        if (e.key === "ArrowLeft")
-          setLightbox((v) => (v === null ? v : (v - 1 + total) % total));
-        return;
-      }
       if (e.key === "ArrowRight") goNext();
       if (e.key === "ArrowLeft") goPrev();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [goNext, goPrev, lightbox, total]);
+  }, [goNext, goPrev]);
 
-  // ─── Drag handlers ─────────────────────────────────────────
-  // Swipe left/right to change the active portrait.
   const onPointerDown = (e: React.PointerEvent) => {
     dragStartX.current = e.clientX;
     draggedRef.current = false;
@@ -91,8 +87,6 @@ export function HeroPortraits({
     dragStartX.current = null;
   };
 
-  // ─── Helpers ───────────────────────────────────────────────
-  // Wrap an index around the ring so it renders at the shortest visual distance.
   const getOffset = (i: number) => {
     let diff = i - active;
     if (diff > total / 2) diff -= total;
@@ -100,7 +94,35 @@ export function HeroPortraits({
     return diff;
   };
 
+  const getFileId = (img: HeroImage): string | null => {
+    if (!img.fileId) return null;
+    if (typeof img.fileId === "string") return img.fileId;
+    return img.fileId._id;
+  };
+
   const current = portraits[active];
+
+  const handleViewFile = (img: HeroImage) => {
+    const id = getFileId(img);
+    if (!id) return;
+    incrementHeroClick(img._id);
+    window.open(getViewUrl(id), "_blank", "noopener,noreferrer");
+  };
+
+  const handleWatchVideo = (img: HeroImage) => {
+    if (!img.videoUrl) return;
+    incrementHeroClick(img._id);
+    setVideoOpen(img);
+  };
+
+  const badgeIcon = (badge: string) => {
+    if (badge === "new") return <Sparkles className="h-3 w-3" />;
+    if (badge === "featured") return <Star className="h-3 w-3" />;
+    if (badge === "video") return <Play className="h-3 w-3" />;
+    return null;
+  };
+
+  if (total === 0) return null;
 
   return (
     <div
@@ -108,20 +130,19 @@ export function HeroPortraits({
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* Ambient glow behind the carousel */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-10 mx-auto h-64 max-w-3xl hero-glow"
       />
 
-      {/* Previous arrow (hidden on mobile) */}
+      {/* Arrows */}
       <button
         type="button"
         aria-label={prevLabel}
         onClick={goPrev}
         className="hidden md:flex absolute left-2 lg:left-6 top-1/2 -translate-y-1/2 z-30 h-11 w-11 items-center justify-center rounded-full border border-border bg-background/90 text-text shadow-card transition-all duration-300 hover:scale-110 hover:text-primary hover:border-primary hover:shadow-lift"
       >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
           <path
             d="M15 6l-6 6 6 6"
             stroke="currentColor"
@@ -131,15 +152,13 @@ export function HeroPortraits({
           />
         </svg>
       </button>
-
-      {/* Next arrow (hidden on mobile) */}
       <button
         type="button"
         aria-label={nextLabel}
         onClick={goNext}
         className="hidden md:flex absolute right-2 lg:right-6 top-1/2 -translate-y-1/2 z-30 h-11 w-11 items-center justify-center rounded-full border border-border bg-background/90 text-text shadow-card transition-all duration-300 hover:scale-110 hover:text-primary hover:border-primary hover:shadow-lift"
       >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
           <path
             d="M9 6l6 6-6 6"
             stroke="currentColor"
@@ -150,7 +169,7 @@ export function HeroPortraits({
         </svg>
       </button>
 
-      {/* 3D stage — every portrait is positioned relative to the active index */}
+      {/* 3D stage */}
       <div
         className="hero-stage overflow-hidden"
         onPointerDown={onPointerDown}
@@ -169,12 +188,8 @@ export function HeroPortraits({
           {portraits.map((p, i) => {
             const offset = getOffset(i);
             const abs = Math.abs(offset);
-
-            // Only render the 4 closest portraits (±3) for performance.
             if (abs > 3) return null;
 
-            // ─── Motion math ──────────────────────────────────
-            // Portraits further from the center are pushed back, rotated, and blurred.
             const translateX = offset * 130;
             const translateY = abs * 8;
             const translateZ = -abs * 180;
@@ -182,13 +197,11 @@ export function HeroPortraits({
             const rotateX = abs === 0 ? 0 : 2;
             const scale =
               1 - abs * 0.08 + (abs === 0 && hoveredActive ? 0.03 : 0);
-
             const blur = abs === 0 ? 0 : abs === 1 ? 1.5 : 3;
             const opacity =
               abs === 0 ? 1 : abs === 1 ? 0.92 : abs === 2 ? 0.68 : 0.35;
             const zIndex = 40 - abs;
 
-            // Active portrait is taller than its neighbors.
             const heightClass =
               abs === 0
                 ? "h-[320px] sm:h-[360px] md:h-[420px]"
@@ -197,7 +210,7 @@ export function HeroPortraits({
                   : "h-[240px] sm:h-[280px] md:h-[320px]";
 
             const cardClassName = [
-              "hero-card-motion absolute overflow-hidden rounded-2xl",
+              "hero-card-motion absolute overflow-hidden rounded-2xl cursor-pointer",
               "border border-black/5 bg-hero-card",
               abs === 0
                 ? "hero-card-active shadow-[0_30px_60px_-20px_rgba(20,90,66,0.35)] ring-1 ring-primary/20"
@@ -206,7 +219,7 @@ export function HeroPortraits({
               heightClass,
             ].join(" ");
 
-            const cardStyle = {
+            const cardStyle: React.CSSProperties = {
               transform: `translate3d(${translateX}px, ${translateY}px, ${translateZ}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${scale})`,
               opacity,
               zIndex,
@@ -214,12 +227,46 @@ export function HeroPortraits({
               transitionDelay: `${abs * 30}ms`,
             };
 
-            // Shared inner markup for both Link and button variants.
-            const innerContent = (
-              <>
+            const fileId = getFileId(p);
+            const hasVideo = !!p.videoUrl;
+
+            const handleCardClick = () => {
+              if (draggedRef.current) return;
+              if (abs === 0) {
+                if (fileId) handleViewFile(p);
+                else if (hasVideo) handleWatchVideo(p);
+                else if (p.ctaHref) window.location.href = p.ctaHref;
+              } else {
+                setActive(i);
+              }
+            };
+
+            return (
+              <div
+                key={`hero-portrait-${i}`}
+                role="button"
+                tabIndex={0}
+                onClick={handleCardClick}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleCardClick();
+                  }
+                }}
+                aria-label={p.title || p.alt || `Portrait ${i + 1}`}
+                aria-current={abs === 0}
+                className={cardClassName}
+                style={cardStyle}
+                onMouseEnter={() => {
+                  if (abs === 0) setHoveredActive(true);
+                }}
+                onMouseLeave={() => {
+                  if (abs === 0) setHoveredActive(false);
+                }}
+              >
                 <Image
-                  src={p.src}
-                  alt={p.alt}
+                  src={p.url}
+                  alt={p.alt || p.title || ""}
                   fill
                   sizes="(max-width: 640px) 144px, (max-width: 768px) 176px, 208px"
                   priority={abs === 0}
@@ -227,75 +274,87 @@ export function HeroPortraits({
                   className="object-cover transition-transform duration-700 ease-out"
                 />
 
-                {/* Bottom gradient for readability */}
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-black/15 to-transparent"
+                  className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-linear-to-b from-black/40 to-transparent"
+                />
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-black/80 to-transparent"
                 />
 
-                {/* Title overlay — only on the active portrait */}
-                {p.title && abs === 0 && (
+                {p.badge && (
+                  <span className="absolute inset-s-2 top-2 inline-flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold text-white">
+                    {badgeIcon(p.badge)}
+                    {p.badge === "new" && "جديد"}
+                    {p.badge === "featured" && "مميز"}
+                    {p.badge === "video" && "فيديو"}
+                  </span>
+                )}
+
+                {abs === 0 && (
                   <div className="absolute inset-x-0 bottom-0 p-3 text-white">
-                    <p className="line-clamp-1 text-xs font-semibold">
-                      {p.title}
-                    </p>
+                    {p.title && (
+                      <p className="line-clamp-1 text-xs font-semibold">
+                        {p.title}
+                      </p>
+                    )}
+                    {p.description && (
+                      <p className="mt-0.5 line-clamp-2 text-[10px] text-white/80">
+                        {p.description}
+                      </p>
+                    )}
+
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      {fileId && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleViewFile(p);
+                          }}
+                          className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2 py-1 text-[10px] font-medium text-white backdrop-blur-sm hover:bg-white/30"
+                        >
+                          <BookOpen className="h-3 w-3" />
+                          {labels.viewFile}
+                        </button>
+                      )}
+                      {hasVideo && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleWatchVideo(p);
+                          }}
+                          className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2 py-1 text-[10px] font-medium text-white backdrop-blur-sm hover:bg-white/30"
+                        >
+                          <Play className="h-3 w-3" />
+                          {labels.watchVideo}
+                        </button>
+                      )}
+                      {p.ctaLabel && p.ctaHref && (
+                        <Link
+                          href={p.ctaHref}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            incrementHeroClick(p._id);
+                          }}
+                          className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2 py-1 text-[10px] font-medium text-white backdrop-blur-sm hover:bg-white/30"
+                        >
+                          <ExternalLink className="h-3 w-3" />
+                          {p.ctaLabel}
+                        </Link>
+                      )}
+                    </div>
                   </div>
                 )}
-              </>
-            );
-
-            // Hover state only applies to the active portrait.
-            const hoverEvents = {
-              onMouseEnter: () => {
-                if (abs === 0) setHoveredActive(true);
-              },
-              onMouseLeave: () => {
-                if (abs === 0) setHoveredActive(false);
-              },
-            };
-
-            // If a portrait has an href, render it as a Link.
-            if (p.href) {
-              return (
-                <Link
-                  key={`hero-portrait-${i}`}
-                  href={p.href}
-                  aria-label={p.title || p.alt}
-                  className={cardClassName}
-                  style={cardStyle}
-                  {...hoverEvents}
-                >
-                  {innerContent}
-                </Link>
-              );
-            }
-
-            // Otherwise render it as a button (click = activate or open lightbox).
-            return (
-              <button
-                key={`hero-portrait-${i}`}
-                type="button"
-                onClick={() => {
-                  // Ignore clicks that were actually drags.
-                  if (!draggedRef.current) {
-                    if (abs === 0) setLightbox(i);
-                    else setActive(i);
-                  }
-                }}
-                aria-label={p.title || p.alt || `Portrait ${i + 1}`}
-                aria-current={abs === 0}
-                className={cardClassName}
-                style={cardStyle}
-                {...hoverEvents}
-              >
-                {innerContent}
-              </button>
+              </div>
             );
           })}
         </div>
       </div>
 
-      {/* Caption + dot navigation */}
+      {/* Caption + dots */}
       <div
         key={active}
         className="mx-auto mt-8 flex max-w-2xl flex-col items-center gap-4 text-center"
@@ -331,120 +390,33 @@ export function HeroPortraits({
         </div>
       </div>
 
-      {/* Lightbox — full-screen preview with keyboard + click navigation */}
-      {lightbox !== null && (
-        <div
-          className="fixed inset-0 z-100 flex items-center justify-center bg-text/80 p-4 backdrop-blur-sm"
-          onClick={() => setLightbox(null)}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Image preview"
-        >
-          {/* Close button */}
-          <button
-            type="button"
-            onClick={() => setLightbox(null)}
-            aria-label="Close"
-            className="absolute top-4 inset-e-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
-          >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              aria-hidden
-            >
-              <path
-                d="M6 6l12 12M18 6L6 18"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-              />
-            </svg>
-          </button>
-
-          {/* Lightbox previous */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setLightbox((v) => (v === null ? v : (v - 1 + total) % total));
-            }}
-            aria-label={prevLabel}
-            className="absolute left-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
-          >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              aria-hidden
-            >
-              <path
-                d="M15 6l-6 6 6 6"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-
-          {/* Image container — stopPropagation so inner clicks don't close the lightbox */}
-          <div
-            className="relative max-h-[85vh] w-full max-w-3xl overflow-hidden rounded-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="relative aspect-3/4 max-h-[85vh] w-full">
-              <Image
-                src={portraits[lightbox].src}
-                alt={portraits[lightbox].alt}
-                fill
-                sizes="90vw"
-                className="object-contain"
-              />
-            </div>
-            {portraits[lightbox].title && (
-              <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/60 to-transparent p-6 text-white">
-                <p className="text-lg font-semibold">
-                  {portraits[lightbox].title}
-                </p>
-                {portraits[lightbox].description && (
-                  <p className="mt-1 text-sm text-white/80">
-                    {portraits[lightbox].description}
-                  </p>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Lightbox next */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setLightbox((v) => (v === null ? v : (v + 1) % total));
-            }}
-            aria-label={nextLabel}
-            className="absolute right-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
-          >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              aria-hidden
-            >
-              <path
-                d="M9 6l6 6-6 6"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-        </div>
+      {/* Video modal */}
+      {videoOpen && videoOpen.videoUrl && (
+        <FileViewer
+          file={{
+            _id: videoOpen._id,
+            title: videoOpen.title || videoOpen.alt || "Video",
+            description: videoOpen.description || "",
+            url: videoOpen.url,
+            publicId: videoOpen.publicId,
+            size: 0,
+            format: "video",
+            downloads: 0,
+            views: 0,
+            category: "other",
+            tags: [],
+            videoUrl: videoOpen.videoUrl,
+            createdAt: videoOpen.createdAt,
+          }}
+          onClose={() => setVideoOpen(null)}
+          labels={{
+            preview: labels.preview,
+            download: labels.download,
+            watchVideo: labels.watchVideo,
+            openNewTab: labels.openNewTab,
+            unsupported: labels.unsupported,
+          }}
+        />
       )}
     </div>
   );

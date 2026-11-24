@@ -180,4 +180,24 @@ export function toEmbedUrl(url: string): string | null {
   }
 }
 
+// ─────────────────────────────────────────────────────────────
+// Hero helpers
+// ─────────────────────────────────────────────────────────────
+
+export async function incrementHeroView(id: string): Promise<void> {
+  try {
+    await fetch(`${API_URL}/hero/${id}/view`, { method: "POST" });
+  } catch {
+    // silent
+  }
+}
+
+export async function incrementHeroClick(id: string): Promise<void> {
+  try {
+    await fetch(`${API_URL}/hero/${id}/click`, { method: "POST" });
+  } catch {
+    // silent
+  }
+}
+
 export { API_URL };

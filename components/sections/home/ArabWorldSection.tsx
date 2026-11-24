@@ -29,10 +29,11 @@ const ARAB_COUNTRIES: ArabCountry[] = [
   { code: "km", flag: "🇰🇲", nameAr: "جزر القمر", nameEn: "Comoros" },
 ];
 
+// Split into 3 rows of 7, 7, 8 countries
 const ROWS = [
-  ARAB_COUNTRIES.slice(0, 8),
-  ARAB_COUNTRIES.slice(8, 16),
-  ARAB_COUNTRIES.slice(16),
+  ARAB_COUNTRIES.slice(0, 7),
+  ARAB_COUNTRIES.slice(7, 14),
+  ARAB_COUNTRIES.slice(14),
 ];
 
 export function ArabWorldSection({
@@ -77,16 +78,24 @@ export function ArabWorldSection({
             <div
               key={rowIndex}
               className="relative overflow-hidden mask-fade-radial"
+              dir={locale === "ar" ? "rtl" : "ltr"}
             >
               <div
-                className={`flex gap-3 ${
-                  rowIndex % 2 === 0
-                    ? "animate-marquee-left"
-                    : "animate-marquee-right"
-                }`}
+                className={[
+                  "flex gap-3 w-max",
+                  // RTL: alternate between moving right (forward) and left (reverse)
+                  locale === "ar"
+                    ? rowIndex % 2 === 0
+                      ? "animate-marquee-rtl-forward"
+                      : "animate-marquee-rtl-reverse"
+                    : rowIndex % 2 === 0
+                      ? "animate-marquee-ltr-forward"
+                      : "animate-marquee-ltr-reverse",
+                ].join(" ")}
                 style={{ animationDuration: `${30 + rowIndex * 5}s` }}
               >
-                {[...row, ...row].map((country, i) => (
+                {/* Duplicate the row so the loop is seamless */}
+                {[...row, ...row, ...row].map((country, i) => (
                   <CountryCard
                     key={`${country.code}-${i}`}
                     country={country}
@@ -136,6 +145,54 @@ export function ArabWorldSection({
           </a>
         </div>
       </div>
+
+      {/* Marquee animations — defined once per direction */}
+      <style jsx>{`
+        @keyframes marquee-ltr-forward {
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(-33.333%);
+          }
+        }
+        @keyframes marquee-ltr-reverse {
+          from {
+            transform: translateX(-33.333%);
+          }
+          to {
+            transform: translateX(0);
+          }
+        }
+        @keyframes marquee-rtl-forward {
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(33.333%);
+          }
+        }
+        @keyframes marquee-rtl-reverse {
+          from {
+            transform: translateX(33.333%);
+          }
+          to {
+            transform: translateX(0);
+          }
+        }
+        .animate-marquee-ltr-forward {
+          animation: marquee-ltr-forward linear infinite;
+        }
+        .animate-marquee-ltr-reverse {
+          animation: marquee-ltr-reverse linear infinite;
+        }
+        .animate-marquee-rtl-forward {
+          animation: marquee-rtl-forward linear infinite;
+        }
+        .animate-marquee-rtl-reverse {
+          animation: marquee-rtl-reverse linear infinite;
+        }
+      `}</style>
     </section>
   );
 }

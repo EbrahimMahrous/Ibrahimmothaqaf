@@ -11,6 +11,7 @@ import { ContactSection } from "@/components/sections/home/ContactSection";
 import { NewsletterSection } from "@/components/sections/home/NewsletterSection";
 import { fetchHeroImages, fetchFiles } from "@/lib/api";
 import { cacheLife, cacheTag } from "next/cache";
+import type { HeroImage } from "@/types";
 
 export const instant = false;
 
@@ -31,25 +32,73 @@ export async function generateMetadata({
   });
 }
 
-const DEFAULT_PORTRAITS = [
-  { src: "/images/hero/portrait-1.jpg", alt: "" },
-  { src: "/images/hero/portrait-2.jpg", alt: "" },
-  { src: "/images/hero/portrait-3.jpg", alt: "" },
-  { src: "/images/hero/portrait-4.jpg", alt: "" },
-  { src: "/images/hero/portrait-5.jpg", alt: "" },
-  { src: "/images/hero/portrait-6.jpg", alt: "" },
-  { src: "/images/hero/portrait-7.jpg", alt: "" },
+// Fallback portraits — same shape as HeroImage (but _id will be synthetic)
+const DEFAULT_PORTRAITS: HeroImage[] = [
+  {
+    _id: "default-1",
+    url: "/images/hero/portrait-1.jpg",
+    publicId: "",
+    alt: "",
+    order: 0,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: "default-2",
+    url: "/images/hero/portrait-2.jpg",
+    publicId: "",
+    alt: "",
+    order: 1,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: "default-3",
+    url: "/images/hero/portrait-3.jpg",
+    publicId: "",
+    alt: "",
+    order: 2,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: "default-4",
+    url: "/images/hero/portrait-4.jpg",
+    publicId: "",
+    alt: "",
+    order: 3,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: "default-5",
+    url: "/images/hero/portrait-5.jpg",
+    publicId: "",
+    alt: "",
+    order: 4,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: "default-6",
+    url: "/images/hero/portrait-6.jpg",
+    publicId: "",
+    alt: "",
+    order: 5,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: "default-7",
+    url: "/images/hero/portrait-7.jpg",
+    publicId: "",
+    alt: "",
+    order: 6,
+    createdAt: new Date().toISOString(),
+  },
 ];
 
-async function getHeroData() {
+async function getHeroData(): Promise<HeroImage[]> {
   "use cache";
   cacheLife("minutes");
   cacheTag("hero");
 
   const images = await fetchHeroImages();
-  return images.length > 0
-    ? images.map((img) => ({ src: img.url, alt: img.alt || "" }))
-    : DEFAULT_PORTRAITS;
+  return images.length > 0 ? images : DEFAULT_PORTRAITS;
 }
 
 async function getFeaturedFiles() {
@@ -88,6 +137,15 @@ export default async function HomePage({ params }: PageProps) {
         portraits={portraits}
         carouselLabels={t.common.carousel}
         features={t.home.hero.features}
+        portraitLabels={{
+          viewFile: t.library.card.preview,
+          watchVideo: t.library.card.watchVideo,
+          openNewTab: locale === "ar" ? "فتح في تاب جديد" : "Open in new tab",
+          unsupported:
+            locale === "ar" ? "المعاينة غير متاحة" : "Preview not available",
+          preview: t.library.card.preview,
+          download: t.library.card.download,
+        }}
       />
 
       <AboutPreview
@@ -121,7 +179,7 @@ export default async function HomePage({ params }: PageProps) {
         cardLabels={{
           download: t.library.card.download,
           watchVideo: t.library.card.watchVideo,
-          preview: t.library.card.preview, // ← add
+          preview: t.library.card.preview,
           views: t.library.stats.views,
           downloads: t.library.stats.downloads,
           isNew: t.library.card.new,
@@ -141,7 +199,6 @@ export default async function HomePage({ params }: PageProps) {
         projects={projects}
       />
 
-      {/* ─── Contact Section ────────────────────────────── */}
       <ContactSection
         locale={locale}
         labels={{
@@ -170,7 +227,6 @@ export default async function HomePage({ params }: PageProps) {
         }}
       />
 
-      {/* ─── Newsletter Section ─────────────────────────── */}
       <NewsletterSection
         labels={{
           newsletterTitle: t.common.newsletterSection.title,

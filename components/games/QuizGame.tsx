@@ -1,0 +1,221 @@
+"use client";
+
+import { useCallback, useRef, useState } from "react";
+import {
+  Trophy,
+  RotateCcw,
+  CheckCircle2,
+  XCircle,
+  Lightbulb,
+} from "lucide-react";
+import { GameShell } from "./GameShell";
+import {
+  QUIZ_CATEGORIES,
+  QUIZ_QUESTIONS,
+  type QuizCategory,
+  type QuizQuestion,
+} from "./quizData";
+import type { GameProps } from "./types";
+
+export function QuizGame({ highScore, onScore }: GameProps) {
+  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
+  const [current, setCurrent] = useState(0);
+  const [selected, setSelected] = useState<0 | 1 | null>(null);
+  const [score, setScore] = useState(0);
+  const [running, setRunning] = useState(false);
+  const [finished, setFinished] = useState(false);
+  const [category, setCategory] = useState<QuizCategory | "all">("all");
+  const scoreRef = useRef(0);
+
+  const shuffleQuestions = (cat: QuizCategory | "all") => {
+    const pool =
+      cat === "all"
+        ? QUIZ_QUESTIONS
+        : QUIZ_QUESTIONS.filter((q) => q.category === cat);
+    const shuffled = [...pool].sort(() => Math.random() - 0.5).slice(0, 10);
+    setQuestions(shuffled);
+    setCurrent(0);
+    setSelected(null);
+    setScore(0);
+    scoreRef.current = 0;
+    setFinished(false);
+    setRunning(true);
+  };
+
+  const reset = useCallback(() => {
+    setQuestions([]);
+    setCurrent(0);
+    setSelected(null);
+    setScore(0);
+    scoreRef.current = 0;
+    setFinished(false);
+    setRunning(false);
+  }, []);
+
+  const handleAnswer = (choice: 0 | 1) => {
+    if (selected !== null) return;
+    setSelected(choice);
+    const q = questions[current];
+    const isCorrect = choice === q.correct;
+    if (isCorrect) {
+      scoreRef.current += 10;
+      setScore(scoreRef.current);
+    }
+    setTimeout(() => {
+      if (current + 1 >= questions.length) {
+        setFinished(true);
+        setRunning(false);
+        onScore(scoreRef.current);
+      } else {
+        setCurrent((c) => c + 1);
+        setSelected(null);
+      }
+    }, 1800);
+  };
+
+  const q = questions[current];
+  const catMeta = q ? QUIZ_CATEGORIES[q.category] : null;
+
+  return (
+    <GameShell
+      score={score}
+      highScore={highScore}
+      running={running}
+      onStart={() => shuffleQuestions(category)}
+      onReset={reset}
+      instructions="10 أسئلة — كل إجابة صح = 10 نقاط"
+    >
+      <div className="bg-canvas-alt p-3 min-h-80">
+        {questions.length === 0 ? (
+          <div className="flex h-full flex-col items-center justify-center gap-3 text-center py-8">
+            <span className="text-4xl">🎯</span>
+            <p className="text-sm font-medium text-text">اختبر معرفتك</p>
+            <p className="text-xs text-muted">اختر مجال واحصل على 10 أسئلة</p>
+            <div className="grid grid-cols-2 gap-2 w-full max-w-xs">
+              <button
+                onClick={() => {
+                  setCategory("all");
+                  shuffleQuestions("all");
+                }}
+                className="rounded-lg border border-primary bg-primary/10 px-2 py-2 text-[11px] font-medium text-primary hover:bg-primary/20"
+              >
+                🎲 كل المجالات
+              </button>
+              {(Object.keys(QUIZ_CATEGORIES) as QuizCategory[]).map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => {
+                    setCategory(cat);
+                    shuffleQuestions(cat);
+                  }}
+                  className="rounded-lg border border-primary-tint bg-surface px-2 py-2 text-[11px] font-medium text-text hover:border-primary hover:bg-primary-tint"
+                >
+                  {QUIZ_CATEGORIES[cat].emoji} {QUIZ_CATEGORIES[cat].label}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : finished ? (
+          <div className="flex h-full flex-col items-center justify-center gap-3 text-center py-8">
+            <Trophy className="h-12 w-12 text-primary" />
+            <p className="text-lg font-bold text-text">
+              نتيجة: {score} / {questions.length * 10}
+            </p>
+            <p className="text-xs text-muted">
+              {score === questions.length * 10
+                ? "🏆 ممتاز! معرفتك قوية"
+                : score >= questions.length * 6
+                  ? "👍 كويس جدًا، كمّل كده"
+                  : "📚 محتاج تراجع شوية — ابدأ من المكتبة"}
+            </p>
+            <button
+              onClick={() => shuffleQuestions(category)}
+              className="mt-2 inline-flex items-center gap-1 rounded-full bg-primary px-4 py-2 text-xs font-medium text-white hover:opacity-90"
+            >
+              <RotateCcw className="h-3 w-3" />
+              العب تاني
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between text-[11px]">
+              <span className="text-muted">
+                سؤال {current + 1} / {questions.length}
+              </span>
+              {catMeta && (
+                <span
+                  className="rounded-full px-2 py-0.5 text-[10px] font-medium"
+                  style={{
+                    background: `${catMeta.color}20`,
+                    color: catMeta.color,
+                  }}
+                >
+                  {catMeta.emoji} {catMeta.label}
+                </span>
+              )}
+            </div>
+
+            <div className="h-1 w-full overflow-hidden rounded-full bg-primary-tint">
+              <div
+                className="h-full bg-primary transition-all duration-300"
+                style={{
+                  width: `${((current + 1) / questions.length) * 100}%`,
+                }}
+              />
+            </div>
+
+            <p className="text-sm font-semibold leading-relaxed text-text min-h-15">
+              {q.question}
+            </p>
+
+            <div className="space-y-2">
+              {q.options.map((opt, i) => {
+                const isSelected = selected === i;
+                const isCorrect = i === q.correct;
+                const showResult = selected !== null;
+                return (
+                  <button
+                    key={i}
+                    onClick={() => handleAnswer(i as 0 | 1)}
+                    disabled={showResult}
+                    className={`flex w-full items-center gap-2 rounded-lg border px-3 py-2.5 text-sm font-medium transition-all ${
+                      showResult
+                        ? isCorrect
+                          ? "border-green-500 bg-green-50 text-green-700"
+                          : isSelected
+                            ? "border-red-500 bg-red-50 text-red-700"
+                            : "border-primary-tint bg-surface text-muted"
+                        : "border-primary-tint bg-surface text-text hover:border-primary hover:bg-primary-tint"
+                    }`}
+                  >
+                    {showResult && isCorrect && (
+                      <CheckCircle2 className="h-4 w-4 shrink-0" />
+                    )}
+                    {showResult && isSelected && !isCorrect && (
+                      <XCircle className="h-4 w-4 shrink-0" />
+                    )}
+                    {!showResult && (
+                      <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-primary-tint text-[10px] font-bold text-primary">
+                        {i === 0 ? "أ" : "ب"}
+                      </span>
+                    )}
+                    {opt}
+                  </button>
+                );
+              })}
+            </div>
+
+            {selected !== null && (
+              <div className="flex items-start gap-2 rounded-lg bg-primary-tint/50 p-2.5">
+                <Lightbulb className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
+                <p className="text-[11px] leading-relaxed text-text">
+                  {q.explanation}
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </GameShell>
+  );
+}

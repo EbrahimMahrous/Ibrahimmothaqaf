@@ -64,6 +64,9 @@ export default async function AboutPage({ params }: PageProps) {
               statusSize={0.2}
               labels={roleLabels}
               showLabelsOnMobile
+              variant="neon"
+              tilt
+              orbit
             />
           </div>
 

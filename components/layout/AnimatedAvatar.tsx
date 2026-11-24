@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRef, useState, useEffect } from "react";
 import { siteConfig, type Locale } from "@/config/site.config";
 
 type Variant =
@@ -11,7 +12,13 @@ type Variant =
   | "highlight"
   | "outline"
   | "glass"
-  | "watermark";
+  | "watermark"
+  // New variants
+  | "neon"
+  | "split"
+  | "code"
+  | "mono"
+  | "ribbon";
 
 type LabelPosition =
   | "top"
@@ -46,6 +53,12 @@ interface AnimatedAvatarProps {
   labels?: FloatingLabel[];
   /** Whether to show the labels on mobile. */
   showLabelsOnMobile?: boolean;
+  /** Enable 3D tilt on mouse move (default: false). */
+  tilt?: boolean;
+  /** Enable particle orbit around the avatar (default: true). */
+  orbit?: boolean;
+  /** Enable gradient ring (default: true). */
+  gradientRing?: boolean;
 }
 
 const positionClasses: Record<
@@ -104,6 +117,9 @@ export function AnimatedAvatar({
   tagline,
   labels,
   showLabelsOnMobile = true,
+  tilt = false,
+  orbit = true,
+  gradientRing = true,
 }: AnimatedAvatarProps) {
   const l = locale as Locale;
   const name = siteConfig.siteName[l];
@@ -121,31 +137,110 @@ export function AnimatedAvatar({
 
   const hasLabels = labels && labels.length > 0;
 
+  // ─── 3D tilt ────────────────────────────────────────────
+  const tiltRef = useRef<HTMLSpanElement>(null);
+  const [tiltStyle, setTiltStyle] = useState<React.CSSProperties>({});
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!tilt || !tiltRef.current) return;
+    const rect = tiltRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    const maxTilt = 12;
+    setTiltStyle({
+      transform: `perspective(600px) rotateX(${-y * maxTilt}deg) rotateY(${x * maxTilt}deg)`,
+      transition: "transform 0.1s ease-out",
+    });
+  };
+
+  const handleMouseLeave = () => {
+    if (!tilt) return;
+    setTiltStyle({
+      transform: "perspective(600px) rotateX(0deg) rotateY(0deg)",
+      transition: "transform 0.4s ease-out",
+    });
+  };
+
   return (
     <span className="inline-flex items-center gap-3">
       {/* ═══════════ Avatar + floating labels container ═══════════ */}
-      <span className="relative inline-flex shrink-0">
+      <span
+        ref={tiltRef}
+        className="relative inline-flex shrink-0"
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={tiltStyle}
+      >
+        {/* Particle orbit */}
+        {orbit && (
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 z-0"
+          >
+            {[0, 1, 2, 3].map((i) => (
+              <span
+                key={i}
+                className="absolute rounded-full bg-primary/60"
+                style={{
+                  width: "3px",
+                  height: "3px",
+                  top: "50%",
+                  left: "50%",
+                  animation: `avatar-orbit-${i} ${6 + i * 1.5}s linear infinite`,
+                  transformOrigin: "center",
+                }}
+              />
+            ))}
+          </span>
+        )}
+
         {/* Avatar */}
         <span
-          className={`avatar-wrap relative inline-flex items-center justify-center ${
+          className={`avatar-wrap group relative inline-flex items-center justify-center ${
             usingClassSize ? className : ""
           }`}
           style={wrapperStyle}
           aria-label={name}
         >
+          {/* Gradient ring (outer) */}
           <span
             aria-hidden
-            className="avatar-ring-outer absolute inset-0 rounded-full border border-dashed border-primary/40"
+            className={`avatar-ring-outer absolute inset-0 rounded-full ${
+              gradientRing ? "" : "border border-dashed border-primary/40"
+            }`}
+            style={
+              gradientRing
+                ? {
+                    background:
+                      "conic-gradient(from 0deg, transparent 0deg, var(--color-primary) 90deg, transparent 180deg, var(--color-accent) 270deg, transparent 360deg)",
+                    WebkitMask:
+                      "radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px))",
+                    mask: "radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px))",
+                    animation: "avatar-spin 8s linear infinite",
+                  }
+                : undefined
+            }
           />
+
+          {/* Inner ring */}
           <span
             aria-hidden
             className="avatar-ring-inner absolute inset-[10%] rounded-full border border-primary/30"
           />
+
+          {/* Arc (legacy decorative) */}
           <span
             aria-hidden
             className="avatar-arc absolute inset-0 rounded-full"
           />
 
+          {/* Pulse on hover */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 rounded-full border-2 border-primary opacity-0 transition-all duration-500 group-hover:opacity-30 group-hover:scale-110"
+          />
+
+          {/* Image */}
           <span className="relative z-10 flex h-[72%] w-[72%] items-center justify-center overflow-hidden rounded-full bg-surface ring-1 ring-border">
             <Image
               src="/avatar.jpeg"
@@ -157,7 +252,7 @@ export function AnimatedAvatar({
             />
           </span>
 
-          {/* Status dot — size is configurable */}
+          {/* Status dot */}
           {showStatus && (
             <span
               aria-hidden
@@ -204,12 +299,14 @@ export function AnimatedAvatar({
 
       {/* ═══════════ Text logo — variants ═══════════ */}
 
+      {/* ─── Existing variants ─────────────────────────────── */}
+
       {showName && variant === "watermark" && (
         <span className="relative flex flex-col leading-none">
-          <span
+          {/* <span
             aria-hidden
             className="mb-2 h-0.5 w-8 rounded-full bg-primary"
-          />
+          /> */}
           <span className="relative inline-flex items-center">
             <span
               aria-hidden
@@ -334,6 +431,147 @@ export function AnimatedAvatar({
           </span>
         </span>
       )}
+
+      {/* ─── New variants ──────────────────────────────────── */}
+
+      {/* NEON — glowing name with text-shadow */}
+      {showName && variant === "neon" && (
+        <span className="relative inline-flex items-center">
+          <span
+            className={`relative font-bold tracking-tight ${
+              nameClassName || "text-[15px]"
+            }`}
+            style={{
+              color: "var(--color-primary)",
+              textShadow:
+                "0 0 6px var(--color-primary), 0 0 16px var(--color-primary), 0 0 30px var(--color-primary)",
+            }}
+          >
+            {name}
+          </span>
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 -z-10 rounded-full blur-xl"
+            style={{
+              background: "var(--color-primary)",
+              opacity: 0.18,
+            }}
+          />
+        </span>
+      )}
+
+      {/* SPLIT — first name big, last name small */}
+      {showName && variant === "split" && (
+        <span className="flex flex-col leading-none">
+          <span
+            className={`font-bold tracking-tight text-text ${
+              nameClassName || "text-[15px]"
+            }`}
+          >
+            {name.split(" ")[0] || name}
+          </span>
+          {name.split(" ").length > 1 && (
+            <span className="mt-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-primary">
+              {name.split(" ").slice(1).join(" ")}
+            </span>
+          )}
+        </span>
+      )}
+
+      {/* CODE — <name/> in monospace */}
+      {showName && variant === "code" && (
+        <span className="inline-flex items-center gap-0.5 rounded-md border border-primary/20 bg-canvas-alt px-2.5 py-1 font-mono">
+          <span className="text-xs text-primary/60">&lt;</span>
+          <span
+            className={`font-semibold text-text ${
+              nameClassName || "text-[13px]"
+            }`}
+          >
+            {name}
+          </span>
+          <span className="text-xs text-primary/60">/&gt;</span>
+        </span>
+      )}
+
+      {/* MONO — uppercase monospace */}
+      {showName && variant === "mono" && (
+        <span
+          className={`font-mono font-semibold uppercase tracking-[0.2em] text-text ${
+            nameClassName || "text-[13px]"
+          }`}
+        >
+          {name}
+        </span>
+      )}
+
+      {/* RIBBON — name with colored ribbon behind */}
+      {showName && variant === "ribbon" && (
+        <span className="relative inline-flex items-center">
+          <span
+            aria-hidden
+            className="absolute -inset-x-2 inset-y-0 -z-10 rounded-full bg-primary"
+          />
+          <span
+            className={`relative font-bold tracking-tight text-white ${
+              nameClassName || "text-[14px]"
+            }`}
+          >
+            {name}
+          </span>
+        </span>
+      )}
+
+      {/* ═══════════ Animations ═══════════ */}
+      <style jsx>{`
+        @keyframes avatar-spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+        @keyframes avatar-orbit-0 {
+          from {
+            transform: translate(-50%, -50%) rotate(0deg) translateX(28px)
+              rotate(0deg);
+          }
+          to {
+            transform: translate(-50%, -50%) rotate(360deg) translateX(28px)
+              rotate(-360deg);
+          }
+        }
+        @keyframes avatar-orbit-1 {
+          from {
+            transform: translate(-50%, -50%) rotate(90deg) translateX(34px)
+              rotate(-90deg);
+          }
+          to {
+            transform: translate(-50%, -50%) rotate(450deg) translateX(34px)
+              rotate(-450deg);
+          }
+        }
+        @keyframes avatar-orbit-2 {
+          from {
+            transform: translate(-50%, -50%) rotate(180deg) translateX(24px)
+              rotate(-180deg);
+          }
+          to {
+            transform: translate(-50%, -50%) rotate(540deg) translateX(24px)
+              rotate(-540deg);
+          }
+        }
+        @keyframes avatar-orbit-3 {
+          from {
+            transform: translate(-50%, -50%) rotate(270deg) translateX(38px)
+              rotate(-270deg);
+          }
+          to {
+            transform: translate(-50%, -50%) rotate(630deg) translateX(38px)
+              rotate(-630deg);
+          }
+        }
+      `}</style>
     </span>
   );
 }
