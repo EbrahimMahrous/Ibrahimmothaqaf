@@ -1,13 +1,79 @@
 "use client";
 
+// ─────────────────────────────────────────────────────────────
+// Memory Game — 4 themes with random emojis each round
+// ─────────────────────────────────────────────────────────────
+
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Timer } from "lucide-react";
+import { Timer, Palette } from "lucide-react";
 import { GameShell } from "./GameShell";
+import { getGamesDict } from "@/lib/games-i18n";
 import type { GameProps } from "./types";
 
-const EMOJIS = ["🦁", "🐯", "🐸", "🐧", "🦊", "🐼", "🐨", "🦄"];
+type ThemeKey = "animals" | "flags" | "symbols" | "tools";
 
-export function MemoryGame({ highScore, onScore }: GameProps) {
+const THEMES: Record<ThemeKey, string[]> = {
+  animals: [
+    "🦁",
+    "🐯",
+    "🐸",
+    "🐧",
+    "🦊",
+    "🐼",
+    "🐨",
+    "🦄",
+    "🦋",
+    "🐙",
+    "🐝",
+    "🦉",
+  ],
+  flags: [
+    "🇪🇬",
+    "🇸🇦",
+    "🇦🇪",
+    "🇰🇼",
+    "🇶🇦",
+    "🇧🇭",
+    "🇴🇲",
+    "🇯🇴",
+    "🇱🇧",
+    "🇲🇦",
+    "🇩🇿",
+    "🇹🇳",
+  ],
+  symbols: [
+    "⚡",
+    "🔥",
+    "💧",
+    "🌍",
+    "☀️",
+    "🌙",
+    "⭐",
+    "🍀",
+    "💎",
+    "🎯",
+    "🎨",
+    "🚀",
+  ],
+  tools: [
+    "🔧",
+    "🔨",
+    "📐",
+    "✂️",
+    "🖊️",
+    "📎",
+    "🔑",
+    "🔒",
+    "💻",
+    "📱",
+    "📷",
+    "🎧",
+  ],
+};
+
+export function MemoryGame({ highScore, onScore, lang }: GameProps) {
+  const dict = getGamesDict(lang);
+  const [theme, setTheme] = useState<ThemeKey>("animals");
   const [cards, setCards] = useState<string[]>([]);
   const [flipped, setFlipped] = useState<number[]>([]);
   const [matched, setMatched] = useState<number[]>([]);
@@ -17,8 +83,11 @@ export function MemoryGame({ highScore, onScore }: GameProps) {
   const [seconds, setSeconds] = useState(0);
   const wonRef = useRef(false);
 
-  const shuffle = () => {
-    const deck = [...EMOJIS, ...EMOJIS].sort(() => Math.random() - 0.5);
+  const shuffle = (t: ThemeKey = theme) => {
+    const pool = THEMES[t];
+    // Pick 8 random pairs
+    const selected = [...pool].sort(() => Math.random() - 0.5).slice(0, 8);
+    const deck = [...selected, ...selected].sort(() => Math.random() - 0.5);
     setCards(deck);
     setFlipped([]);
     setMatched([]);
@@ -84,24 +153,42 @@ export function MemoryGame({ highScore, onScore }: GameProps) {
       score={score}
       highScore={highScore}
       running={running}
-      onStart={shuffle}
+      onStart={() => shuffle()}
       onReset={reset}
-      instructions="اقل حركات + وقت = نقاط أعلى"
+      instructions={dict.games.memory.instructions}
+      lang={lang}
     >
       <div className="bg-canvas-alt p-3">
         {cards.length === 0 ? (
-          <div className="flex h-64 flex-col items-center justify-center gap-2 text-center">
-            <span className="text-4xl">🧠</span>
-            <p className="text-sm font-medium text-text">لعبة الذاكرة</p>
-            <p className="text-xs text-muted">اضغط ابدأ لخلط البطاقات</p>
+          <div className="flex h-full min-h-64 flex-col items-center justify-center gap-3 text-center py-4">
+            <Palette className="h-10 w-10 text-primary" />
+            <p className="text-sm font-medium text-text">
+              {dict.memory.pickTheme}
+            </p>
+            <div className="grid grid-cols-2 gap-2 w-full max-w-xs">
+              {(Object.keys(THEMES) as ThemeKey[]).map((t) => (
+                <button
+                  key={t}
+                  onClick={() => {
+                    setTheme(t);
+                    shuffle(t);
+                  }}
+                  className="rounded-lg border border-primary-tint bg-surface px-2 py-2 text-[11px] font-medium text-text hover:border-primary hover:bg-primary-tint"
+                >
+                  {dict.memory.themes[t]}
+                </button>
+              ))}
+            </div>
           </div>
         ) : (
           <>
             <div className="mb-2 flex items-center justify-between text-[11px] text-muted">
-              <span>الحركات: {moves}</span>
+              <span>
+                {dict.memory.moves}: {moves}
+              </span>
               <span className="inline-flex items-center gap-1">
                 <Timer className="h-3 w-3" />
-                {seconds}s
+                {seconds} {dict.memory.seconds}
               </span>
             </div>
             <div className="grid grid-cols-4 gap-2">

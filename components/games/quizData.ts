@@ -1,3 +1,7 @@
+// ─────────────────────────────────────────────────────────────
+// Quiz data — 60 questions across 4 categories (15 per category)
+// ─────────────────────────────────────────────────────────────
+
 export type QuizCategory = "management" | "career" | "business" | "thinking";
 
 export interface QuizQuestion {
@@ -10,154 +14,440 @@ export interface QuizQuestion {
 
 export const QUIZ_CATEGORIES: Record<
   QuizCategory,
-  { label: string; emoji: string; color: string }
+  { emoji: string; color: string }
 > = {
-  management: {
-    label: "الإدارة والقيادة",
-    emoji: "👔",
-    color: "var(--color-primary)",
-  },
-  career: {
-    label: "التطور الوظيفي",
-    emoji: "📈",
-    color: "#10b981",
-  },
-  business: {
-    label: "البزنس والأرقام",
-    emoji: "💰",
-    color: "#f59e0b",
-  },
-  thinking: {
-    label: "التفكير واتخاذ القرار",
-    emoji: "🧩",
-    color: "#8b5cf6",
-  },
+  management: { emoji: "👔", color: "var(--color-primary)" },
+  career: { emoji: "📈", color: "#10b981" },
+  business: { emoji: "💰", color: "#f59e0b" },
+  thinking: { emoji: "🧩", color: "#8b5cf6" },
 };
 
 export const QUIZ_QUESTIONS: QuizQuestion[] = [
-  // ─── Management ───────────────────────────────────────
+  // ─── Management (15) ─────────────────────────────────
   {
     category: "management",
-    question: "المدير الفعّال هو اللي بيدير كل حاجة بنفسه عشان يتأكد إنها صح.",
+    question: "المدير الفعّال بيدير كل تفصيلة بنفسه.",
     options: ["صح", "غلط"],
     correct: 1,
-    explanation:
-      "المدير الفعّال بيفوّض وبيبني أنظمة تشتغل من غيره. الإدارة الذاتية للتفاصيل بتخلق اختناق (bottleneck).",
+    explanation: "المدير الفعّال بيفوّض وبيبني أنظمة، ليس اختناقًا.",
   },
   {
     category: "management",
-    question: "لما فريقك يغلط، أول خطوة هي محاسبته فورًا.",
+    question: "أول خطوة عند خطأ الفريق هي المحاسبة.",
     options: ["صح", "غلط"],
     correct: 1,
-    explanation:
-      "أول خطوة هي فهم السبب (نظام؟ تدريب؟ موارد؟). المحاسبة قبل التحليل بتخلق خوف مش تعلّم.",
+    explanation: "افهم السبب أولًا، ثم قرر.",
   },
   {
     category: "management",
-    question:
-      "الاجتماعات اليومية القصيرة (standup) بتقلل الحاجة لاجتماعات طويلة.",
+    question: "الاجتماع اليومي 15 دقيقة يقلل الاجتماعات الطويلة.",
     options: ["صح", "غلط"],
     correct: 0,
-    explanation:
-      "Standup 15 دقيقة بيقلل التواصل غير الرسمي والاجتماعات الطويلة، وبيخلي المشاكل تظهر بدري.",
+    explanation: "Standup يظهر المشاكل مبكرًا.",
   },
   {
     category: "management",
-    question: "لازم كل قرار ياخده المدير يكون بإجماع الفريق.",
+    question: "كل قرار لازم يكون بالإجماع.",
     options: ["صح", "غلط"],
     correct: 1,
-    explanation:
-      "الإجماع مش دايمًا ممكن. القائد بيسمع الفريق، لكنه مسؤول عن القرار النهائي.",
-  },
-  // ─── Career ───────────────────────────────────────────
-  {
-    category: "career",
-    question: "لو عايز ترقّي، أهم حاجة هي إنك تشتغل أكتر ساعات.",
-    options: ["صح", "غلط"],
-    correct: 1,
-    explanation:
-      "الترقية بتيجي من الأثر (impact) مش من الساعات. تحل مشكلة أكبر = ترقية أسرع.",
+    explanation: "القائد يسمع، لكنه مسؤول عن القرار.",
   },
   {
-    category: "career",
-    question: "لازم تسأل مديرك عن خطة تطويرك كل 6 شهور على الأقل.",
+    category: "management",
+    question: "بناء نظام أهم من حل نفس المشكلة كل مرة.",
     options: ["صح", "غلط"],
     correct: 0,
-    explanation:
-      "مبادرة تطويرك مسؤوليتك. السؤال الدوري بيخلي التوقعات واضحة وبيقلل المفاجآت.",
+    explanation: "الأنظمة تمنع التكرار.",
+  },
+  {
+    category: "management",
+    question: "الفريق القوي يسهّل عمل المدير.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "الفريق القوي يرفع الجميع.",
+  },
+  {
+    category: "management",
+    question: "التوقعات المكتوبة أفضل من الشفهية.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "الكتابة تحمي الجميع.",
+  },
+  {
+    category: "management",
+    question: "التدريب استثمار، ليس تكلفة.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "فريق مدرَّب أفضل من فريق كبير.",
+  },
+  {
+    category: "management",
+    question: "الاعتراف بالخطأ يقلل من هيبة المدير.",
+    options: ["صح", "غلط"],
+    correct: 1,
+    explanation: "الاعتراف يبني الثقة.",
+  },
+  {
+    category: "management",
+    question: "الاستشارة تعني التصويت.",
+    options: ["صح", "غلط"],
+    correct: 1,
+    explanation: "الاستشارة تحسّن القرار، لا تُلغيه.",
+  },
+  {
+    category: "management",
+    question: "KPIs لازم تكون قابلة للقياس.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "ما لا يُقاس، لا يُحسَّن.",
+  },
+  {
+    category: "management",
+    question: "التفكير الاستراتيجي يحتاج وقتًا محميًا.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "الانغماس في المهام يقتل التفكير.",
+  },
+  {
+    category: "management",
+    question: "العميل أهم من المنافس.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "العميل يحدد نجاحك.",
+  },
+  {
+    category: "management",
+    question: "الاحتفاظ بالكاش قرار حكيم.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "الكاش هو الأكسجين.",
+  },
+  {
+    category: "management",
+    question: "المراجعة السنوية كافية لتصحيح المسار.",
+    options: ["صح", "غلط"],
+    correct: 1,
+    explanation: "المراجعة الأسبوعية أفضل.",
+  },
+
+  // ─── Career (15) ─────────────────────────────────────
+  {
+    category: "career",
+    question: "الترقية تأتي من ساعات العمل الأكثر.",
+    options: ["صح", "غلط"],
+    correct: 1,
+    explanation: "الترقية تأتي من الأثر، ليس الساعات.",
+  },
+  {
+    category: "career",
+    question: "مبادرة تطويرك مسؤوليتك.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "اسأل مديرك دوريًا.",
   },
   {
     category: "career",
     question: "الشهادة أهم من الشبكة المهنية.",
     options: ["صح", "غلط"],
     correct: 1,
-    explanation:
-      "الاتنين مهمين، لكن الشبكة بتفتح أبواب مش موجودة في الشهادات. الشهادة بتثبت، الشبكة بتوصل.",
+    explanation: "الاثنان مهمان، الشبكة تفتح أبوابًا.",
   },
-  // ─── Business ─────────────────────────────────────────
   {
-    category: "business",
-    question: "زيادة الإيرادات دايمًا معناها زيادة الربح.",
+    category: "career",
+    question: "حل مشكلة أكبر يسرّع الترقية.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "الأثر يفتح الأبواب.",
+  },
+  {
+    category: "career",
+    question: "التخصص الدقيق أفضل من التنوع دائمًا.",
     options: ["صح", "غلط"],
     correct: 1,
-    explanation:
-      "الربح = الإيرادات − التكاليف. لو التكاليف زادت أسرع من الإيرادات، الربح بيقل.",
+    explanation: "التنوع يبني مرونة، التخصص يبني عمقًا.",
+  },
+  {
+    category: "career",
+    question: "التواصل الفعّال مهارة قابلة للتعلّم.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "مهارة تُكتسب بالممارسة.",
+  },
+  {
+    category: "career",
+    question: "الراتب هو المؤشر الوحيد للنجاح.",
+    options: ["صح", "غلط"],
+    correct: 1,
+    explanation: "التطور والتعلم مؤشرات أيضًا.",
+  },
+  {
+    category: "career",
+    question: "المرونة أهم من الخطة الجامدة.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "الخطط تتغير، المرونة تنجيك.",
+  },
+  {
+    category: "career",
+    question: "الوظيفة الآمنة هي الأفضل دائمًا.",
+    options: ["صح", "غلط"],
+    correct: 1,
+    explanation: "الأمان قد يكون فخًا للنمو.",
+  },
+  {
+    category: "career",
+    question: "بناء سمعة قوية يستغرق وقتًا.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "السمعة تُبنى بالثبات.",
+  },
+  {
+    category: "career",
+    question: "التعلم المستمر ضرورة، ليس رفاهية.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "السوق يتغير، والتعلم يواكب.",
+  },
+  {
+    category: "career",
+    question: "الملاحظات السلبية دليل فشل.",
+    options: ["صح", "غلط"],
+    correct: 1,
+    explanation: "الملاحظات فرصة للتحسين.",
+  },
+  {
+    category: "career",
+    question: "اختيار المدير أهم من اختيار الشركة.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "المدير يشكل تجربتك.",
+  },
+  {
+    category: "career",
+    question: "الشبكة المهنية للطلب فقط، ليس للعطاء.",
+    options: ["صح", "غلط"],
+    correct: 1,
+    explanation: "العطاء أولًا يبني شبكة قوية.",
+  },
+  {
+    category: "career",
+    question: "الاحتراق الوظيفي (burnout) علامة ضعف.",
+    options: ["صح", "غلط"],
+    correct: 1,
+    explanation: "الاحتراق إشارة لنظام غير صحي.",
+  },
+
+  // ─── Business (15) ───────────────────────────────────
+  {
+    category: "business",
+    question: "زيادة الإيرادات تعني زيادة الربح دائمًا.",
+    options: ["صح", "غلط"],
+    correct: 1,
+    explanation: "الربح = الإيرادات − التكاليف.",
   },
   {
     category: "business",
     question: "Cash flow أهم من الربح على المدى القصير.",
     options: ["صح", "غلط"],
     correct: 0,
-    explanation:
-      "شركات كتير بتربح في الدفاتر وبتفلس بسبب نقص السيولة. الكاش هو الأكسجين.",
+    explanation: "الشركات تفلس بسبب نقص السيولة.",
   },
   {
     category: "business",
-    question: "لو التكلفة بتزيد، أفضل حل دايمًا هو تقليل الفريق.",
+    question: "تقليل الفريق هو الحل الأول لزيادة التكاليف.",
     options: ["صح", "غلط"],
     correct: 1,
-    explanation:
-      "تقليل الفريق ممكن يقلل القدرة على النمو. الأفضل تحليل: هل التكلفة في المكان الصح؟",
+    explanation: "حلّل أولًا أين التكلفة الحقيقية.",
   },
   {
     category: "business",
-    question: "مؤشرات الأداء (KPIs) لازم تكون قابلة للقياس.",
+    question: "KPIs قابلة للقياس ضرورة.",
     options: ["صح", "غلط"],
     correct: 0,
-    explanation:
-      "الـ KPI غير القابل للقياس = رأي مش مؤشر. لازم رقم + إطار زمني + مسؤول.",
-  },
-  // ─── Thinking ─────────────────────────────────────────
-  {
-    category: "thinking",
-    question: "أول حل يخطر على بالك غالبًا هو الأفضل.",
-    options: ["صح", "غلط"],
-    correct: 1,
-    explanation:
-      "أول حل غالبًا بيكون الأسرع مش الأفضل. خد وقتك لتوليد بدائل قبل الاختيار.",
+    explanation: "رقم + إطار زمني + مسؤول.",
   },
   {
-    category: "thinking",
-    question: "لما تكون مش متأكد، الأفضل تأجل القرار لأطول فترة.",
-    options: ["صح", "غلط"],
-    correct: 1,
-    explanation:
-      "التأجيل قرار برضه، وأحيانًا أغلى من القرار الغلط. حدد وقت للقرار وخده.",
-  },
-  {
-    category: "thinking",
-    question: "الاعتماد على البيانات دايمًا أحسن من الحدس.",
-    options: ["صح", "غلط"],
-    correct: 1,
-    explanation:
-      "البيانات بتحكي 'إيه' بس مش 'ليه'. الحدس المبني على خبرة بيكمل الصورة.",
-  },
-  {
-    category: "thinking",
-    question: "لما تلاقي معلومة بتأكد رأيك، لازم تدور على معلومة بتعارضه.",
+    category: "business",
+    question: "السعر يحدده السوق، ليس التكلفة.",
     options: ["صح", "غلط"],
     correct: 0,
-    explanation:
-      "ده اسمه 'التفكير النقدي'. البحث عن الرأي المعارض بيقلل التحيز وبيحسّن القرار.",
+    explanation: "السوق يدفع ما يستحق، ليس ما يكلف.",
+  },
+  {
+    category: "business",
+    question: "رضا العميل أهم من ربح صفقة واحدة.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "العميل الراضي يعود ويوصي.",
+  },
+  {
+    category: "business",
+    question: "التوسع السريع دائمًا أفضل.",
+    options: ["صح", "غلط"],
+    correct: 1,
+    explanation: "التوسع بلا أساس يسبب انهيارًا.",
+  },
+  {
+    category: "business",
+    question: "الفريق أهم من الفكرة.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "الفريق ينفّذ ويعدّل، الفكرة وحدها لا تكفي.",
+  },
+  {
+    category: "business",
+    question: "الديون أداة مالية، ليس شرًا دائمًا.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "الدين المدروس يضاعف النمو.",
+  },
+  {
+    category: "business",
+    question: "التسويق يبني علامة، ليس مبيعات فقط.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "العلامة تعيش أطول من الحملة.",
+  },
+  {
+    category: "business",
+    question: "المنافسة دائمًا عدو.",
+    options: ["صح", "غلط"],
+    correct: 1,
+    explanation: "المنافسة تدفعك للأفضل.",
+  },
+  {
+    category: "business",
+    question: "الاحتفاظ بالعميل أرخص من استقطاب جديد.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "الاحتفاظ أرخص بـ 5-7 مرات.",
+  },
+  {
+    category: "business",
+    question: "الشفافية مع الفريق تزيد الثقة.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "الشفافية تبني ولاءً.",
+  },
+  {
+    category: "business",
+    question: "البيانات وحدها كافية لاتخاذ القرار.",
+    options: ["صح", "غلط"],
+    correct: 1,
+    explanation: "البيانات + الحدس + السياق.",
+  },
+  {
+    category: "business",
+    question: "الاحتياطي المالي ضرورة، ليس رفاهية.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "الطوارئ تأتي بلا موعد.",
+  },
+
+  // ─── Thinking (15) ───────────────────────────────────
+  {
+    category: "thinking",
+    question: "أول حل يخطر ببالك هو الأفضل عادةً.",
+    options: ["صح", "غلط"],
+    correct: 1,
+    explanation: "الأول أسرع، ليس أفضل.",
+  },
+  {
+    category: "thinking",
+    question: "التأجيل قرار أيضًا.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "التأجيل قد يكون أغلى.",
+  },
+  {
+    category: "thinking",
+    question: "البيانات دائمًا أفضل من الحدس.",
+    options: ["صح", "غلط"],
+    correct: 1,
+    explanation: "الحدس المبني على خبرة يكمل الصورة.",
+  },
+  {
+    category: "thinking",
+    question: "لازم تدور على رأي معارض لرأيك.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "التفكير النقدي يقلل التحيز.",
+  },
+  {
+    category: "thinking",
+    question: "التحيز التأكيدي (confirmation bias) مضر.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "تجنّبه يحسّن القرار.",
+  },
+  {
+    category: "thinking",
+    question: "الخبرة وحدها كافية لاتخاذ القرار.",
+    options: ["صح", "غلط"],
+    correct: 1,
+    explanation: "الخبرة تحتاج تحديثًا بالبيانات.",
+  },
+  {
+    category: "thinking",
+    question: "التفكير البطيء ينتج قرارات أفضل.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "التفكير البطيء يقلل الأخطاء.",
+  },
+  {
+    category: "thinking",
+    question: "الحدس لا يمكن تدريبه.",
+    options: ["صح", "غلط"],
+    correct: 1,
+    explanation: "الحدس يُدرَّب بالخبرة والتأمل.",
+  },
+  {
+    category: "thinking",
+    question: "المراجعة الدورية للقرارات تُحسّنها.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "المراجعة تكشف الأنماط.",
+  },
+  {
+    category: "thinking",
+    question: "التفكير الجماعي (groupthink) مفيد دائمًا.",
+    options: ["صح", "غلط"],
+    correct: 1,
+    explanation: "التفكير الجماعي يخفي البدائل.",
+  },
+  {
+    category: "thinking",
+    question: "التساؤل أفضل من الإجابة السريعة.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "السؤال الصحيح يفتح الحلول.",
+  },
+  {
+    category: "thinking",
+    question: "الحدس والتحليل نقيضان.",
+    options: ["صح", "غلط"],
+    correct: 1,
+    explanation: "الاثنان مكملان لبعضهما.",
+  },
+  {
+    category: "thinking",
+    question: "التفكير الاستراتيجي يتطلب تبسيطًا.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "التبسيط يكشف الجوهر.",
+  },
+  {
+    category: "thinking",
+    question: "الافتراضات يجب اختبارها.",
+    options: ["صح", "غلط"],
+    correct: 0,
+    explanation: "الافتراض غير المُختبر قد يكون خطأً.",
+  },
+  {
+    category: "thinking",
+    question: "التفكير النقدي يعني الشك في كل شيء.",
+    options: ["صح", "غلط"],
+    correct: 1,
+    explanation: "التفكير النقدي = فحص الأدلة، ليس الشك الأعمى.",
   },
 ];

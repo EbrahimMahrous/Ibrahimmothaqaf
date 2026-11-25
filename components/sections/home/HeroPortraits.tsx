@@ -2,14 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { BookOpen, Play, ExternalLink, Sparkles, Star } from "lucide-react";
-import {
-  getViewUrl,
-  incrementHeroClick,
-  incrementHeroView,
-  toEmbedUrl,
-} from "@/lib/api";
+import { getViewUrl, incrementHeroClick, incrementHeroView } from "@/lib/api";
 import { FileViewer } from "@/components/sections/library/FileViewer";
 import type { HeroImage } from "@/types";
 
@@ -33,12 +28,14 @@ export function HeroPortraits({
   nextLabel = "Next",
   labels,
 }: HeroPortraitsProps) {
+  const router = useRouter();
   const total = portraits.length;
   const [active, setActive] = useState(Math.floor(total / 2));
   const [paused, setPaused] = useState(false);
   const [videoOpen, setVideoOpen] = useState<HeroImage | null>(null);
   const [hoveredActive, setHoveredActive] = useState(false);
 
+  // ── Drag detection WITHOUT pointer capture (so buttons keep working)
   const dragStartX = useRef<number | null>(null);
   const draggedRef = useRef(false);
 
@@ -71,14 +68,23 @@ export function HeroPortraits({
   }, [goNext, goPrev]);
 
   const onPointerDown = (e: React.PointerEvent) => {
+    // Only track drags that start on the stage background, not on buttons
+    const target = e.target as HTMLElement;
+    if (
+      target.closest("button, a, [role='button']") !== null &&
+      target.closest("[data-hero-card]") === null
+    ) {
+      return;
+    }
     dragStartX.current = e.clientX;
     draggedRef.current = false;
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
   };
+
   const onPointerMove = (e: React.PointerEvent) => {
     if (dragStartX.current == null) return;
     if (Math.abs(e.clientX - dragStartX.current) > 6) draggedRef.current = true;
   };
+
   const onPointerUp = (e: React.PointerEvent) => {
     if (dragStartX.current == null) return;
     const delta = e.clientX - dragStartX.current;
@@ -113,6 +119,20 @@ export function HeroPortraits({
     if (!img.videoUrl) return;
     incrementHeroClick(img._id);
     setVideoOpen(img);
+  };
+
+  const navigateTo = (href: string) => {
+    if (/^https?:\/\//i.test(href)) {
+      window.open(href, "_blank", "noopener,noreferrer");
+    } else {
+      router.push(href);
+    }
+  };
+
+  const handleCta = (img: HeroImage) => {
+    if (!img.ctaHref) return;
+    incrementHeroClick(img._id);
+    navigateTo(img.ctaHref);
   };
 
   const badgeIcon = (badge: string) => {
@@ -178,7 +198,7 @@ export function HeroPortraits({
         onPointerCancel={onPointerUp}
       >
         <div
-          className="relative mx-auto flex h-85 sm:h-100 md:h-115 max-w-350 items-center justify-center"
+          className="relative mx-auto flex h-95 sm:h-110 md:h-125 max-w-350 items-center justify-center"
           style={{
             transformStyle: "preserve-3d",
             perspective: "1600px",
@@ -202,21 +222,22 @@ export function HeroPortraits({
               abs === 0 ? 1 : abs === 1 ? 0.92 : abs === 2 ? 0.68 : 0.35;
             const zIndex = 40 - abs;
 
-            const heightClass =
+            const widthClass =
               abs === 0
-                ? "h-[320px] sm:h-[360px] md:h-[420px]"
+                ? "w-40 sm:w-48 md:w-56"
                 : abs === 1
-                  ? "h-[280px] sm:h-[320px] md:h-[370px]"
-                  : "h-[240px] sm:h-[280px] md:h-[320px]";
+                  ? "w-36 sm:w-44 md:w-52"
+                  : "w-32 sm:w-40 md:w-48";
 
             const cardClassName = [
-              "hero-card-motion absolute overflow-hidden rounded-2xl cursor-pointer",
+              "hero-card-motion absolute overflow-hidden rounded-2xl",
               "border border-black/5 bg-hero-card",
               abs === 0
                 ? "hero-card-active shadow-[0_30px_60px_-20px_rgba(20,90,66,0.35)] ring-1 ring-primary/20"
                 : "shadow-[0_18px_40px_-16px_rgba(20,90,66,0.22)]",
-              "w-36 sm:w-44 md:w-52",
-              heightClass,
+              widthClass,
+              "aspect-[9/16]",
+              abs === 0 ? "cursor-pointer" : "cursor-pointer",
             ].join(" ");
 
             const cardStyle: React.CSSProperties = {
@@ -229,13 +250,14 @@ export function HeroPortraits({
 
             const fileId = getFileId(p);
             const hasVideo = !!p.videoUrl;
+            const hasCta = !!p.ctaLabel && !!p.ctaHref;
 
             const handleCardClick = () => {
               if (draggedRef.current) return;
               if (abs === 0) {
                 if (fileId) handleViewFile(p);
                 else if (hasVideo) handleWatchVideo(p);
-                else if (p.ctaHref) window.location.href = p.ctaHref;
+                else if (hasCta) handleCta(p);
               } else {
                 setActive(i);
               }
@@ -244,6 +266,7 @@ export function HeroPortraits({
             return (
               <div
                 key={`hero-portrait-${i}`}
+                data-hero-card={abs === 0 ? "active" : "inactive"}
                 role="button"
                 tabIndex={0}
                 onClick={handleCardClick}
@@ -268,7 +291,7 @@ export function HeroPortraits({
                   src={p.url}
                   alt={p.alt || p.title || ""}
                   fill
-                  sizes="(max-width: 640px) 144px, (max-width: 768px) 176px, 208px"
+                  sizes="(max-width: 640px) 160px, (max-width: 768px) 192px, 224px"
                   priority={abs === 0}
                   draggable={false}
                   className="object-cover transition-transform duration-700 ease-out"
@@ -310,6 +333,7 @@ export function HeroPortraits({
                         <button
                           type="button"
                           onClick={(e) => {
+                            e.preventDefault();
                             e.stopPropagation();
                             handleViewFile(p);
                           }}
@@ -323,6 +347,7 @@ export function HeroPortraits({
                         <button
                           type="button"
                           onClick={(e) => {
+                            e.preventDefault();
                             e.stopPropagation();
                             handleWatchVideo(p);
                           }}
@@ -332,18 +357,19 @@ export function HeroPortraits({
                           {labels.watchVideo}
                         </button>
                       )}
-                      {p.ctaLabel && p.ctaHref && (
-                        <Link
-                          href={p.ctaHref}
+                      {hasCta && (
+                        <button
+                          type="button"
                           onClick={(e) => {
+                            e.preventDefault();
                             e.stopPropagation();
-                            incrementHeroClick(p._id);
+                            handleCta(p);
                           }}
                           className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2 py-1 text-[10px] font-medium text-white backdrop-blur-sm hover:bg-white/30"
                         >
                           <ExternalLink className="h-3 w-3" />
                           {p.ctaLabel}
-                        </Link>
+                        </button>
                       )}
                     </div>
                   </div>
@@ -357,36 +383,35 @@ export function HeroPortraits({
       {/* Caption + dots */}
       <div
         key={active}
-        className="mx-auto mt-8 flex max-w-2xl flex-col items-center gap-4 text-center"
+        className="mx-auto mt-8 max-w-2xl"
         style={{ animation: "fadeInUp 500ms ease-out both" }}
       >
-        {current?.title && (
-          <p className="text-base font-semibold text-text">{current.title}</p>
-        )}
-        {current?.description && (
-          <p className="max-w-xl text-sm leading-relaxed text-muted">
-            {current.description}
-          </p>
-        )}
+        <div className="relative rounded-2xl bg-linear-to-b from-primary/5 to-transparent p-5 text-center">
+          {current?.title && (
+            <p className="text-base font-semibold text-text">{current.title}</p>
+          )}
+          {current?.description && (
+            <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-muted">
+              {current.description}
+            </p>
+          )}
 
-        <div className="flex items-center justify-center gap-2">
-          {portraits.map((_, i) => {
-            const isActive = i === active;
-            return (
+          <div className="mt-4 flex items-center justify-center gap-2">
+            {portraits.map((_, i) => (
               <button
                 key={`dot-${i}`}
                 type="button"
                 aria-label={`Go to ${i + 1}`}
                 onClick={() => setActive(i)}
                 className={[
-                  "hero-dot h-1.5 rounded-full",
-                  isActive
+                  "hero-dot h-1.5 rounded-full transition-all",
+                  i === active
                     ? "w-8 bg-primary"
                     : "w-1.5 bg-primary/25 hover:bg-primary/50",
                 ].join(" ")}
               />
-            );
-          })}
+            ))}
+          </div>
         </div>
       </div>
 

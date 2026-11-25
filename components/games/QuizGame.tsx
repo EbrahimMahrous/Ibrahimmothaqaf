@@ -7,6 +7,12 @@ import {
   CheckCircle2,
   XCircle,
   Lightbulb,
+  Dices,
+  Briefcase,
+  TrendingUp,
+  DollarSign,
+  Puzzle,
+  type LucideIcon,
 } from "lucide-react";
 import { GameShell } from "./GameShell";
 import {
@@ -15,9 +21,18 @@ import {
   type QuizCategory,
   type QuizQuestion,
 } from "./quizData";
+import { getGamesDict } from "@/lib/games-i18n";
 import type { GameProps } from "./types";
 
-export function QuizGame({ highScore, onScore }: GameProps) {
+const CATEGORY_ICONS: Record<QuizCategory, LucideIcon> = {
+  management: Briefcase,
+  career: TrendingUp,
+  business: DollarSign,
+  thinking: Puzzle,
+};
+
+export function QuizGame({ highScore, onScore, lang = "ar" }: GameProps) {
+  const dict = getGamesDict(lang);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<0 | 1 | null>(null);
@@ -75,6 +90,8 @@ export function QuizGame({ highScore, onScore }: GameProps) {
 
   const q = questions[current];
   const catMeta = q ? QUIZ_CATEGORIES[q.category] : null;
+  const total = questions.length;
+  const maxScore = total * 10;
 
   return (
     <GameShell
@@ -83,74 +100,94 @@ export function QuizGame({ highScore, onScore }: GameProps) {
       running={running}
       onStart={() => shuffleQuestions(category)}
       onReset={reset}
-      instructions="10 أسئلة — كل إجابة صح = 10 نقاط"
+      instructions={dict.games.quiz.instructions}
+      lang={lang}
     >
       <div className="bg-canvas-alt p-3 min-h-80">
         {questions.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center gap-3 text-center py-8">
-            <span className="text-4xl">🎯</span>
-            <p className="text-sm font-medium text-text">اختبر معرفتك</p>
-            <p className="text-xs text-muted">اختر مجال واحصل على 10 أسئلة</p>
+            <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-primary-tint text-primary">
+              <Trophy className="h-7 w-7" />
+            </div>
+            <p className="text-sm font-medium text-text">
+              {dict.quiz.pickCategory}
+            </p>
+            <p className="text-xs text-muted">
+              {lang === "ar"
+                ? "اختر مجال واحصل على 10 أسئلة"
+                : "Pick a category and get 10 questions"}
+            </p>
             <div className="grid grid-cols-2 gap-2 w-full max-w-xs">
               <button
                 onClick={() => {
                   setCategory("all");
                   shuffleQuestions("all");
                 }}
-                className="rounded-lg border border-primary bg-primary/10 px-2 py-2 text-[11px] font-medium text-primary hover:bg-primary/20"
+                className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-primary bg-primary/10 px-2 py-2 text-[11px] font-medium text-primary hover:bg-primary/20"
               >
-                🎲 كل المجالات
+                <Dices className="h-3.5 w-3.5" />
+                {dict.quiz.allCategories}
               </button>
-              {(Object.keys(QUIZ_CATEGORIES) as QuizCategory[]).map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => {
-                    setCategory(cat);
-                    shuffleQuestions(cat);
-                  }}
-                  className="rounded-lg border border-primary-tint bg-surface px-2 py-2 text-[11px] font-medium text-text hover:border-primary hover:bg-primary-tint"
-                >
-                  {QUIZ_CATEGORIES[cat].emoji} {QUIZ_CATEGORIES[cat].label}
-                </button>
-              ))}
+              {(Object.keys(QUIZ_CATEGORIES) as QuizCategory[]).map((cat) => {
+                const Icon = CATEGORY_ICONS[cat];
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => {
+                      setCategory(cat);
+                      shuffleQuestions(cat);
+                    }}
+                    className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-primary-tint bg-surface px-2 py-2 text-[11px] font-medium text-text hover:border-primary hover:bg-primary-tint"
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                    {dict.quiz.categories[cat]}
+                  </button>
+                );
+              })}
             </div>
           </div>
         ) : finished ? (
           <div className="flex h-full flex-col items-center justify-center gap-3 text-center py-8">
             <Trophy className="h-12 w-12 text-primary" />
             <p className="text-lg font-bold text-text">
-              نتيجة: {score} / {questions.length * 10}
+              {dict.quiz.score}: {score} / {maxScore}
             </p>
             <p className="text-xs text-muted">
-              {score === questions.length * 10
-                ? "🏆 ممتاز! معرفتك قوية"
-                : score >= questions.length * 6
-                  ? "👍 كويس جدًا، كمّل كده"
-                  : "📚 محتاج تراجع شوية — ابدأ من المكتبة"}
+              {score === maxScore
+                ? dict.quiz.excellent
+                : score >= maxScore * 0.6
+                  ? dict.quiz.good
+                  : dict.quiz.needsReview}
             </p>
             <button
               onClick={() => shuffleQuestions(category)}
               className="mt-2 inline-flex items-center gap-1 rounded-full bg-primary px-4 py-2 text-xs font-medium text-white hover:opacity-90"
             >
               <RotateCcw className="h-3 w-3" />
-              العب تاني
+              {dict.quiz.playAgain}
             </button>
           </div>
         ) : (
           <div className="space-y-3">
             <div className="flex items-center justify-between text-[11px]">
               <span className="text-muted">
-                سؤال {current + 1} / {questions.length}
+                {dict.quiz.questionOf
+                  .replace("{n}", String(current + 1))
+                  .replace("{total}", String(total))}
               </span>
               {catMeta && (
                 <span
-                  className="rounded-full px-2 py-0.5 text-[10px] font-medium"
+                  className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium"
                   style={{
                     background: `${catMeta.color}20`,
                     color: catMeta.color,
                   }}
                 >
-                  {catMeta.emoji} {catMeta.label}
+                  {(() => {
+                    const Icon = CATEGORY_ICONS[q.category];
+                    return <Icon className="h-3 w-3" />;
+                  })()}
+                  {dict.quiz.categories[q.category]}
                 </span>
               )}
             </div>
@@ -159,7 +196,7 @@ export function QuizGame({ highScore, onScore }: GameProps) {
               <div
                 className="h-full bg-primary transition-all duration-300"
                 style={{
-                  width: `${((current + 1) / questions.length) * 100}%`,
+                  width: `${((current + 1) / total) * 100}%`,
                 }}
               />
             </div>

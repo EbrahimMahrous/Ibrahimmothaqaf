@@ -16,6 +16,7 @@ interface HeaderProps {
     library: string;
     mothaqaf: string;
     projects: string;
+    faq: string; // ← NEW
   };
   switchLabel: string;
   ctaLabel: string;
@@ -80,13 +81,14 @@ export function Header({
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  // Internal nav links.
+  // Internal nav links — FAQ added before projects.
   const links = [
     { href: `/${locale}`, label: nav.home },
     { href: `/${locale}/about`, label: nav.about },
     { href: `/${locale}/library`, label: nav.library },
     { href: `/${locale}/mothaqaf`, label: nav.mothaqaf },
     { href: `/${locale}/projects`, label: nav.projects },
+    { href: `/${locale}/faq`, label: nav.faq },
   ];
 
   // Home is active only on exact match; every other route uses startsWith.

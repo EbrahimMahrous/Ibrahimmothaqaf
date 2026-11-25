@@ -7,8 +7,6 @@ import { AboutPreview } from "@/components/sections/home/AboutPreview";
 import { FeaturedGuides } from "@/components/sections/home/FeaturedGuides";
 import { ProjectsPreview } from "@/components/sections/home/ProjectsPreview";
 import { ArabWorldSection } from "@/components/sections/home/ArabWorldSection";
-import { ContactSection } from "@/components/sections/home/ContactSection";
-import { NewsletterSection } from "@/components/sections/home/NewsletterSection";
 import { fetchHeroImages, fetchFiles } from "@/lib/api";
 import { cacheLife, cacheTag } from "next/cache";
 import type { HeroImage } from "@/types";
@@ -197,47 +195,6 @@ export default async function HomePage({ params }: PageProps) {
         statusLabels={t.common.status}
         viewLabel={t.common.cta.viewProjects}
         projects={projects}
-      />
-
-      <ContactSection
-        locale={locale}
-        labels={{
-          letsTalk: t.common.contactSection.letsTalk,
-          gotIdea: t.common.contactSection.gotIdea,
-          buildTogether: t.common.contactSection.buildTogether,
-          contactTitle: t.common.contactSection.contactTitle,
-          contactSubtitle: t.common.contactSection.contactSubtitle,
-          contactResponseTime: t.common.contactSection.contactResponseTime,
-          contactAlt: t.common.contactSection.contactAlt,
-          contactFormName: t.common.contactSection.formName,
-          contactFormNamePlaceholder:
-            t.common.contactSection.formNamePlaceholder,
-          contactFormEmail: t.common.contactSection.formEmail,
-          contactFormEmailPlaceholder:
-            t.common.contactSection.formEmailPlaceholder,
-          contactFormMessage: t.common.contactSection.formMessage,
-          contactFormMessagePlaceholder:
-            t.common.contactSection.formMessagePlaceholder,
-          contactFormSubmit: t.common.contactSection.formSubmit,
-          contactFormSuccess: t.common.contactSection.formSuccess,
-          contactFormSending: t.common.contactSection.formSending,
-          contactFormError: t.common.contactSection.formError,
-          faqTitle: t.common.contactSection.faqTitle,
-          faqViewAll: t.common.contactSection.faqViewAll,
-        }}
-      />
-
-      <NewsletterSection
-        labels={{
-          newsletterTitle: t.common.newsletterSection.title,
-          newsletterSubtitle: t.common.newsletterSection.subtitle,
-          newsletterPlaceholder: t.common.newsletterSection.placeholder,
-          newsletterSubmit: t.common.newsletterSection.submit,
-          newsletterSuccess: t.common.newsletterSection.success,
-          newsletterError: t.common.newsletterSection.error,
-          newsletterHint: t.common.newsletterSection.hint,
-          newsletterPerks: t.common.newsletterSection.perks,
-        }}
       />
     </>
   );
